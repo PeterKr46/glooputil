@@ -90,13 +90,23 @@ public abstract class Scene
         return prismoid;
     }
 
-    public GLPrismoid erstelleKegel(double[] edge1, double[] edge2, Axis direction)
+    public GLPrismoid createCone(double[] edge1, double[] edge2, Axis direction)
     {
-        return createConeStump(edge1, edge2, 0, direction);
+        return createTruncatedCone(edge1, edge2, 0, direction);
     }
 
-    public GLPrismoid createConeStump(double[] edge1, double[] edge2, float rad2, Axis direction)
+    public GLPrismoid createTruncatedCone(double[] edge1, double[] edge2, float rad2, Axis direction)
     {
         return erstellePrismoid(edge1,edge2,100,rad2,direction);
+    }
+
+    public static GLPrismoid createCylinder(double[] edge1, double[] edge2, Axis direction)
+    {
+        return erstellePrismoid(edge1,edge2,100,direction);
+    }
+
+    public static GLPrismoid erstellePrismoid(double[] ecke1, double[] ecke2, int seiten, Achse ausrichtung)
+    {
+        return erstellePrismoid(ecke1,ecke2,seiten,1.0f,ausrichtung);
     }
 }
