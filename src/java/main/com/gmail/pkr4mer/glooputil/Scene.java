@@ -1,6 +1,7 @@
 package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.*;
+import com.gmail.pkr4mer.glooputil.object.GUCube;
 import com.gmail.pkr4mer.glooputil.object.GUEllipsoid;
 import com.gmail.pkr4mer.glooputil.object.GUObject;
 import com.gmail.pkr4mer.glooputil.position.Axis;
@@ -11,7 +12,7 @@ import com.gmail.pkr4mer.util.CaseInsensitiveMap;
  */
 public abstract class Scene
 {
-    private CaseInsensitiveMap<GLObjekt> objects;
+    private CaseInsensitiveMap<GUObject> objects;
     private boolean running;
     private GLKamera camera;
 
@@ -22,7 +23,7 @@ public abstract class Scene
         createCamera(0, 0, 0);
     }
 
-    public GLObjekt findObject(String name)
+    public GUObject findObject(String name)
     {
         return objects.get(name);
     }
@@ -110,7 +111,7 @@ public abstract class Scene
         return createPrismoid(edge1,edge2,seiten,1.0f,direction);
     }
 
-    public GLQuader createCube(double[] edge1, double[] edge2)
+    public GUCube createCube(double[] edge1, double[] edge2)
     {
         double[][] edges = Util.sortiere(edge1, edge2);                   // Sortiere in kleine und große edge
         edge1 = edges[0];
@@ -119,7 +120,10 @@ public abstract class Scene
         double height = edge2[1] - edge1[1];                         // Berechne die Höhe
         double depth = edge2[2] - edge1[2];                        // Berechne die Länge
         double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-        return new GLQuader(center[0],center[1],center[2], width, height, depth);
+        GLQuader cube = new GLQuader(center[0],center[1],center[2], width, height, depth);
+        GUCube cb = new GUCube(this,cube,null,getAvailableName("cube"));
+        objects.put(cb.getName(),cb);
+        return cb;
     }
 
     public GUEllipsoid createEllipsoid(double[] ecke1, double[] ecke2)
@@ -140,7 +144,8 @@ public abstract class Scene
         double skalY = (height * 0.5)/radius;
         double skalZ = (depth * 0.5)/radius;
         sphere.setzeSkalierung(skalX,skalY,skalZ);
-        GUEllipsoid ellipsoid = new GUEllipsoid(sphere,null,getAvailableName("sphere"));
+        GUEllipsoid ellipsoid = new GUEllipsoid(this,sphere,null,getAvailableName("sphere"));
+        objects.put(ellipsoid.getName(),ellipsoid);
         return ellipsoid;
     }
 

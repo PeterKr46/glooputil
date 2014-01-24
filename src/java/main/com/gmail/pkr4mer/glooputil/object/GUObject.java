@@ -2,6 +2,7 @@ package com.gmail.pkr4mer.glooputil.object;
 
 import GLOOP.GLObjekt;
 import GLOOP.GLTextur;
+import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 
@@ -12,11 +13,27 @@ public class GUObject {
     private GLObjekt GLO;
     private String tag;
     private String name;
+    private Scene scene;
 
-    public GUObject(GLObjekt g, String t, String n) {
+    public GUObject(Scene scene, GLObjekt g, String t, String n) {
         GLO = g;
         tag = t;
         name = n;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getTag()
+    {
+        return tag;
+    }
+
+    public Scene getScene()
+    {
+        return scene;
     }
 
     private void setPosition(double px, double py, double pz){

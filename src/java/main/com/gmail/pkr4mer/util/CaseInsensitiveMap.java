@@ -1,5 +1,7 @@
 package com.gmail.pkr4mer.util;
 
+import com.gmail.pkr4mer.glooputil.object.GUEllipsoid;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
