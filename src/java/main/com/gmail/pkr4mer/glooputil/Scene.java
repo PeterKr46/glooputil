@@ -1,6 +1,8 @@
 package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.*;
+import com.gmail.pkr4mer.glooputil.object.GUEllipsoid;
+import com.gmail.pkr4mer.glooputil.object.GUObject;
 import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
@@ -108,7 +110,7 @@ public abstract class Scene
         return createPrismoid(edge1,edge2,seiten,1.0f,direction);
     }
 
-    public static GLQuader createCube(double[] edge1, double[] edge2)
+    public GLQuader createCube(double[] edge1, double[] edge2)
     {
         double[][] edges = Util.sortiere(edge1, edge2);                   // Sortiere in kleine und große edge
         edge1 = edges[0];
@@ -120,7 +122,7 @@ public abstract class Scene
         return new GLQuader(center[0],center[1],center[2], width, height, depth);
     }
 
-    public static GLKugel createEllipsoid(double[] ecke1, double[] ecke2)
+    public GUEllipsoid createEllipsoid(double[] ecke1, double[] ecke2)
     {
         double[][] edges = Util.sortiere(ecke1, ecke2);
         ecke1 = edges[0];
@@ -138,6 +140,23 @@ public abstract class Scene
         double skalY = (height * 0.5)/radius;
         double skalZ = (depth * 0.5)/radius;
         sphere.setzeSkalierung(skalX,skalY,skalZ);
-        return sphere;
+        GUEllipsoid ellipsoid = new GUEllipsoid(sphere,null,getAvailableName("sphere"));
+        return ellipsoid;
     }
+
+    public String getAvailableName(String name)
+    {
+        if(!isNameTaken(name)) return name;
+        int i = 0;
+        do {
+            i++;
+        } while(isNameTaken(name + "_i"));
+        return name + "_" + i;
+    }
+
+    public boolean isNameTaken(String name)
+    {
+        return objects.get(name) != null;
+    }
+
 }

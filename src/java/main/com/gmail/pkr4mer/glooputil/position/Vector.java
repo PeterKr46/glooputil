@@ -1,5 +1,7 @@
 package com.gmail.pkr4mer.glooputil.position;
 
+import GLOOP.GLVektor;
+
 /**
  * Created by peter on 1/24/14.
  */
@@ -57,5 +59,10 @@ public class Vector
         this.y *= mul;
         this.z *= mul;
         return this;
+    }
+
+    public GLVektor toGLVektor()
+    {
+        return new GLVektor(x,y,z);
     }
 }
