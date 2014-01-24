@@ -7,6 +7,15 @@ import GLOOP.GLVektor;
  */
 public class Vector
 {
+    public static Vector zero()
+    {
+        return new Vector(0,0,0);
+    }
+    public static Vector forward()
+    {
+        return new Vector(0,0,1);
+    }
+
     private double x,y,z;
 
     public Vector(double x, double y, double z)
@@ -31,11 +40,12 @@ public class Vector
         return z;
     }
 
-    public void add(Vector v)
+    public Vector add(Vector v)
     {
         this.x += v.x;
         this.y += v.y;
         this.z += v.z;
+        return this;
     }
 
     public void setX(double x)
@@ -64,5 +74,15 @@ public class Vector
     public GLVektor toGLVektor()
     {
         return new GLVektor(x,y,z);
+    }
+
+    public Vector clone()
+    {
+        return new Vector(x,y,z);
+    }
+
+    public String toString()
+    {
+        return "Vector(" + x + "," + y + "," + z + ")";
     }
 }

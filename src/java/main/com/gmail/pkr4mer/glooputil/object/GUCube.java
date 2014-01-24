@@ -2,6 +2,7 @@ package com.gmail.pkr4mer.glooputil.object;
 
 import GLOOP.GLQuader;
 import com.gmail.pkr4mer.glooputil.Scene;
+import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 1/24/14.
@@ -9,12 +10,12 @@ import com.gmail.pkr4mer.glooputil.Scene;
 public class GUCube extends GUObject
 {
 
-    public GUCube(Scene scene, GLQuader g, String t, String n) {
-        super(scene, g, t, n);
+    public GUCube(Scene scene, GLQuader g, Vector dir, String t, String n) {
+        super(g, scene, t, n, dir);
     }
 
     protected GLQuader getCube()
     {
-        return (GLQuader) GLO;
+        return (GLQuader) glo;
     }
 }

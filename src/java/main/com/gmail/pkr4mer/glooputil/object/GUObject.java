@@ -10,15 +10,23 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
  * Created by Anwender on 24.01.14.
  */
 public class GUObject {
-    private GLObjekt GLO;
-    private String tag;
-    private String name;
-    private Scene scene;
 
-    public GUObject(Scene scene, GLObjekt g, String t, String n) {
-        GLO = g;
+    protected GLObjekt glo;
+    protected Scene scene;
+
+    protected String tag;
+    protected String name;
+    protected Vector rotation;
+
+    protected boolean valid = true;
+
+    public GUObject(GLObjekt g, Scene s, String t, String n, Vector dir)
+    {
+        glo = g;
+        scene = s;
         tag = t;
         name = n;
+        rotation = dir;
     }
 
     public String getName()
@@ -36,29 +44,129 @@ public class GUObject {
         return scene;
     }
 
-    private void setPosition(double px, double py, double pz){
-        GLO.setzePosition(px, py, pz);
+    public void setPosition(double px, double py, double pz){
+        glo.setzePosition(px, py, pz);
     }
-    private void setPosition(Vector pPosition){
-        GLO.setzePosition(pPosition.getX(), pPosition.getY(), pPosition.getZ());
+    public void setPosition(Vector pPosition){
+        glo.setzePosition(pPosition.getX(), pPosition.getY(), pPosition.getZ());
     }
-    private void turn(double pWx, double pWy, double pWz){
-        GLO.drehe(pWx, pWy, pWz);
+    public void rotate(double pWx, double pWy, double pWz){
+        glo.drehe(pWx, pWy, pWz);
+        rotation.add(new Vector(pWx,pWy,pWz));
+        fixRotation();
     }
-    private void turn(double pWx, double pWy, double pWz, double px, double py, double pz){
-        GLO.drehe(pWx, pWy, pWz, px, py, pz);
+    public void turnAround(Vector rot, Vector pt){
+        glo.drehe(rot.getX(), rot.getY(), rot.getZ(), pt.getX(), pt.getY(), pt.getZ());
+        //TODO eigene neuberechnung der Rotation
     }
-    private void turn(double pWx, double pWy, double pWz, Vector pPunkt){
-        GLO.drehe(pWx, pWy, pWz, pPunkt.getX(), pPunkt.getX(), pPunkt.getZ());
+    public void turnAround(double pWx, double pWy, double pWz, Vector pt){
+        glo.drehe(pWx, pWy, pWz, pt.getX(), pt.getX(), pt.getZ());
+        //TODO eigene neuberechnung der Rotation
     }
-    private Vector getPosition(){
-        return new Vector (GLO.gibX(), GLO.gibY(), GLO.gibZ());
+    public Vector getPosition(){
+        return new Vector (glo.gibX(), glo.gibY(), glo.gibZ());
     }
-    private GLTextur getTexture(){
-        return GLO.gibTextur();
+    public GLTextur getTexture(){
+        return glo.gibTextur();
     }
-    private float getX(){
-        return GLO.gibX();
+    public float getX(){
+        return glo.gibX();
+    }
+    public float getY(){
+        return glo.gibY();
+    }
+    public float getZ(){
+        return glo.gibZ();
+    }
+    public void delete(){
+        glo.loesche();
+        valid = false; //TODO dieses Objekt muss auf Scene zugreifen und sich löschen
+    }
+    public void rotate(double pDegrees, Vector pDirection, Vector pLocation){
+        glo.rotiere(pDegrees, pDirection.toGLVektor(), pLocation.toGLVektor());
+        //TODO lokale neuberechnung
+    }
+    public void setRotation(double pWX, double pWY, double pWZ){
+        glo.setzeDrehung(pWX, pWY, pWZ);
+        rotation = new Vector(pWX, pWY, pWZ);
+        fixRotation();
+    }
+    public void setColor(double pR, double pG, double pB){
+        glo.setzeFarbe(pR, pG, pB);
+    }
+    public void setScale(double pG){
+        glo.setzeSkalierung(pG);
+    }
+    public void setScale(double pX, double pY, double pZ){
+        glo.setzeSkalierung(pX, pY, pZ);
+    }
+    public void scale(double pG){
+        glo.skaliere(pG);
+    }
+    public void scale(double pX, double pY, double pZ){
+        glo.skaliere(pX, pY, pZ);
+    }
+    public void move(double pX, double pY, double pZ){
+        glo.verschiebe(pX, pY, pZ);
+    }
+    public void move(Vector pVec){
+        glo.verschiebe(pVec.toGLVektor());
+    }
+    public void setColor(String pFilename){
+        glo.setzeTextur(pFilename);
     }
 
+    public Vector getRotation()
+    {
+        return rotation.clone();
+    }
+
+    public void setRotation(Vector rotation)
+    {
+        glo.setzeDrehung(rotation.getX(), rotation.getY(), rotation.getZ());
+    }
+
+    public Vector getForward()
+    {
+        return new Vector(
+                Math.tan(Math.toRadians(rotation.getX())),
+                Math.tan(Math.toRadians(rotation.getZ())),
+                Math.tan(Math.toRadians(rotation.getY()))
+            );
+    }
+
+    public void forward(double distance)
+    {
+        move(getForward().multiply(distance));
+    }
+
+    private void fixRotation()
+    {
+        while( rotation.getX() > 360 )
+        {
+            rotation.setX(rotation.getX()-360);
+        }
+        while(rotation.getX() < 0 )
+        {
+            rotation.setX(rotation.getX()+360);
+        }
+
+        while( rotation.getY() > 360 )
+        {
+            rotation.setY(rotation.getY() - 360);
+        }
+        while(rotation.getY() < 0 )
+        {
+            rotation.setY(rotation.getY() + 360);
+        }
+
+        while( rotation.getZ() > 360 )
+        {
+            rotation.setZ(rotation.getZ() - 360);
+        }
+        while(rotation.getZ() < 0 )
+        {
+            rotation.setZ(rotation.getZ() + 360);
+        }
+    }
 }

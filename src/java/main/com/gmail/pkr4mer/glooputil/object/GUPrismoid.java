@@ -1,8 +1,8 @@
 package com.gmail.pkr4mer.glooputil.object;
 
-import GLOOP.GLObjekt;
 import GLOOP.GLPrismoid;
 import com.gmail.pkr4mer.glooputil.Scene;
+import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 1/24/14.
@@ -10,12 +10,12 @@ import com.gmail.pkr4mer.glooputil.Scene;
 public class GUPrismoid extends GUObject
 {
 
-    public GUPrismoid(Scene scene, GLPrismoid g, String t, String n) {
-        super(scene, g, t, n);
+    public GUPrismoid(Scene scene, GLPrismoid g, Vector dir, String t, String n) {
+        super(g, scene, t, n, dir);
     }
 
     protected GLPrismoid getPrismoid()
     {
-        return (GLPrismoid) GLO;
+        return (GLPrismoid) glo;
     }
 }

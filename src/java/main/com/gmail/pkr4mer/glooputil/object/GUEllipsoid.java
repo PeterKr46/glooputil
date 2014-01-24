@@ -2,6 +2,7 @@ package com.gmail.pkr4mer.glooputil.object;
 
 import GLOOP.GLKugel;
 import com.gmail.pkr4mer.glooputil.Scene;
+import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 1/24/14.
@@ -9,13 +10,13 @@ import com.gmail.pkr4mer.glooputil.Scene;
 public class GUEllipsoid extends GUObject
 {
 
-    public GUEllipsoid(Scene scene, GLKugel sphere, String tag, String name) {
-        super(scene, sphere, tag, name);
+    public GUEllipsoid(Scene scene, GLKugel sphere, Vector dir, String tag, String name) {
+        super(sphere, scene, tag, name, dir);
     }
 
     protected GLKugel getSphere()
     {
-        return (GLKugel) GLO;
+        return (GLKugel) glo;
     }
 
     public void setQuality(int q)
