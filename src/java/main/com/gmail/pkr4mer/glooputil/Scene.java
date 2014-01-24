@@ -2,6 +2,7 @@ package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.GLKamera;
 import GLOOP.GLObjekt;
+import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
 import java.util.HashMap;
 
@@ -10,32 +11,41 @@ import java.util.HashMap;
  */
 public abstract class Scene
 {
-    private HashMap<String, GLObjekt> objekte;
+    private CaseInsensitiveMap<GLObjekt> objekte;
     private boolean running;
+    private GLKamera kamera;
 
     public Scene()
     {
-        objekte = new HashMap<>();
+        objekte = new CaseInsensitiveMap<>();
         running = true;
+        erstelleKamera(0,0,0);
     }
+
+    public GLObjekt sucheObject(String name)
+    {
+        return objekte.get(name);
+    }
+
+    public abstract void build();
 
     private void mainThread()
     {
         while(running)
         {
-
+            GloopUtil.correctZ(getKamera());
         }
     }
-
-    public GLKamera erstelleKamera()
-    {
-        return erstelleKamera(0, 0, 0);
-    }
       
-    public GLKamera erstelleKamera(double x, double y, double z)
+    private GLKamera erstelleKamera(double x, double y, double z)
     {
-        GLKamera k = new GLKamera();
-        k.setzePosition(x,y,z);
-        return k;
+        kamera = new GLKamera();
+        kamera.setzePosition(x,y,z);
+        return kamera;
+    }
+
+    public GLKamera getKamera()
+    {
+        return kamera;
     }
 }
