@@ -29,7 +29,8 @@ public abstract class Scene
 
     public GLKamera erstelleKamera()
     {
-        erstelleKamera(0, 0, 0);
+        return erstelleKamera(0, 0, 0);
+    }
       
     public GLKamera erstelleKamera(double x, double y, double z)
     {
