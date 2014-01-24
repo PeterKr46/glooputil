@@ -2,11 +2,11 @@ package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.GLObjekt;
 
-
 /**
  * Created by Anwender on 24.01.14.
  */
-public class GUObject {
+public class GUObject
+{
     private GLObjekt GLO;
     private String tag;
     private String name;
