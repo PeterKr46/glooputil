@@ -156,7 +156,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     public Vector getForward()  // Returns the GUObject's forward-pointing vector
     {
-        Vector v = new Vector(0,0,1);
+        Vector v = new Vector(getRotX(),getRotY(),getRotZ());
         v.multiply(1/v.magnitude());
         return v;
     }
@@ -279,21 +279,21 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         return null;
     }
 
-    //TODO richtige Teile der Matrix finden.
+    //TODO richtige Teile der Matrix finden. (size = 16)
 
     public float getRotX()
     {
-        return (float)Math.toDegrees(getMatrix()[12]);
+        return getMatrix()[8];
     }
 
     public float getRotY()
     {
-        return (float)Math.toDegrees(getMatrix()[13]);
+        return getMatrix()[9];
     }
 
     public float getRotZ()
     {
-        return (float)Math.toDegrees(getMatrix()[14]);
+        return getMatrix()[10];
     }
 
     public void debugMatrix()

@@ -26,17 +26,16 @@ public class Beispiele
             {
                 new GLLicht();
                 new GLSchwenkkamera().zeigeAchsen(true);
-                GUObject cube = createCube(new double[]{0, 0, 0}, new double[]{1, 1, 1});
-                cube.rotate(70,30,30);
-                System.out.println(cube.getRotX());
-                System.out.println(cube.getRotY());
-                System.out.println(cube.getRotZ());
+                GUObject cube = createCube(new double[]{0, 0, 0}, new double[]{10, 10, 10});
+                cube.debugMatrix();
             }
 
             @Override
             public void update()
             {
-
+                GUCube cube = (GUCube) findObject("cube");
+                cube.forward(1);
+                cube.rotate(1,0,0);
             }
         };
     }
