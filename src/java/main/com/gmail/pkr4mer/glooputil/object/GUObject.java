@@ -178,9 +178,9 @@ public class GUObject {
     public void setVisible(boolean pV){
         glo.setzeSichtbarkeit(pV);
     }
-    /*public void setTexture(GUTexture pTex){
+    public void setTexture(GUTexture pTex){
         glo.setzeTextur(pTex);
-    }*/
+    }
     public void setLance(double pR, double pG, double pB, int pStrength){
         glo.setzeGlanz(pR, pG, pB, pStrength);
     }
