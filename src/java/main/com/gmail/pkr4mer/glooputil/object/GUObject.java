@@ -7,7 +7,7 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 
 
 /**
- * Created by Anwender on 24.01.14.
+ * Created by Jonas on 24.01.14.
  */
 public class GUObject {
 
@@ -44,8 +44,6 @@ public class GUObject {
         return scene;
     }
 
-    public void setPosition(double px, double py, double pz){
-        glo.setzePosition(px, py, pz);
     public void setPosition(double pX, double pY, double pZ){
         glo.setzePosition(pX, pY, pZ);
     }
@@ -54,19 +52,22 @@ public class GUObject {
     }
     public void turn(double pDx, double pDy, double pDz){
         glo.drehe(pDx, pDy, pDz);
-    public void rotate(double pWx, double pWy, double pWz){
-        glo.drehe(pWx, pWy, pWz);
-        rotation.add(new Vector(pWx,pWy,pWz));
+    }
+    public void rotate(double pDx, double pDy, double pDz){
+        glo.drehe(pDx, pDy, pDz);
+        rotation.add(new Vector(pDx,pDy,pDz));
         fixRotation();
     }
     public void turnAround(Vector rot, Vector pt){
         glo.drehe(rot.getX(), rot.getY(), rot.getZ(), pt.getX(), pt.getY(), pt.getZ());
         //TODO eigene neuberechnung der Rotation
+    }
     public void turn(double pDx, double pDy, double pDz, double px, double py, double pz){
         glo.drehe(pDx, pDy, pDz, px, py, pz);
     }
     public void turn(double pDx, double pDy, double pDz, Vector pPoint){
         glo.drehe(pDx, pDy, pDz, pPoint.getX(), pPoint.getX(), pPoint.getZ());
+    }
     public void turnAround(double pWx, double pWy, double pWz, Vector pt){
         glo.drehe(pWx, pWy, pWz, pt.getX(), pt.getX(), pt.getZ());
         //TODO eigene neuberechnung der Rotation
@@ -101,8 +102,6 @@ public class GUObject {
         glo.setzeDrehung(pWX, pWY, pWZ);
         rotation = new Vector(pWX, pWY, pWZ);
         fixRotation();
-    public void rotate(double pDX, double pDY, double pDZ){
-        glo.setzeDrehung(pDX, pDY, pDZ);
     }
     public void setColor(double pR, double pG, double pB){
         glo.setzeFarbe(pR, pG, pB);
