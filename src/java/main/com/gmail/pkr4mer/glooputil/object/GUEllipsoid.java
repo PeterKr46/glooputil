@@ -16,6 +16,7 @@ public class GUEllipsoid extends GUObject
 
     protected GLKugel getSphere()
     {
+
         return (GLKugel) glo;
     }
 

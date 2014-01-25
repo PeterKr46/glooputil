@@ -1,14 +1,19 @@
 package com.gmail.pkr4mer.glooputil.examples;
 
 import GLOOP.GLLicht;
+import GLOOP.GLObjekt;
 import GLOOP.GLQuader;
 import GLOOP.GLSchwenkkamera;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.GUCube;
+import com.gmail.pkr4mer.glooputil.object.GUObject;
 import com.gmail.pkr4mer.glooputil.object.GUPrismoid;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
+import com.gmail.pkr4mer.util.ReflectionUtilities;
+
+import java.lang.reflect.Field;
 
 public class Beispiele
 {
@@ -19,21 +24,13 @@ public class Beispiele
             @Override
             public void build()
             {
-                GUPrismoid cone = createCylinder(new double[]{5, 5, 5}, new double[]{10, 10, 10}, Axis.Y);
-                System.out.println("cube '" + cone.getName() + "' " + cone);
                 new GLLicht();
-                cone.rotate(45);
                 new GLSchwenkkamera().zeigeAchsen(true);
-                cone.addScript(
-                    new GUScript(cone)
-                    {
-                        @Override
-                        public void fixedUpdate()
-                        {
-                            //getGuObject().forward(1);
-                            System.out.println("My position: " + getGuObject().getPosition());
-                        }
-                    });
+                GUObject cube = createCube(new double[]{0, 0, 0}, new double[]{1, 1, 1});
+                cube.rotate(70,30,30);
+                System.out.println(cube.getRotX());
+                System.out.println(cube.getRotY());
+                System.out.println(cube.getRotZ());
             }
 
             @Override

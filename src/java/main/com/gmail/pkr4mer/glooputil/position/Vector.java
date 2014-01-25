@@ -1,6 +1,7 @@
 package com.gmail.pkr4mer.glooputil.position;
 
 import GLOOP.GLVektor;
+import com.jogamp.graph.math.Quaternion;
 
 /**
  * Created by peter on 1/24/14.
@@ -86,8 +87,37 @@ public class Vector
         return new Vector(x,y,z);
     }
 
+    public double magnitude()
+    {
+        return Math.sqrt(x*x + y*y + z*z);
+    }
+
     public String toString()
     {
         return "Vector(" + x + "," + y + "," + z + ")";
+    }
+
+    public static Vector fromQuaternion(Quaternion q)
+    {
+        return new Vector(q.getX(),q.getY(),q.getZ());
+    }
+
+    public static Quaternion create(float x1, float y1, float z1)
+    {
+        float a = (float)Math.PI*0.5f;
+        // Here we calculate the sin( theta / 2) once for optimization
+        float result = (float) Math.sin( a / 2.0f );
+
+        // Calculate the x, y and z of the quaternion
+        x1 *= result;
+        y1 *= result;
+        z1 *= result;
+
+        // Calcualte the w value by cos( theta / 2 )
+        float w = (float) Math.cos( a / 2.0f );
+
+        Quaternion q = new Quaternion(x1,y1,z1,w);
+        //q.normalize();
+        return q;
     }
 }

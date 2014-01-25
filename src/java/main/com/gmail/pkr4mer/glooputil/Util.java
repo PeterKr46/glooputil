@@ -1,7 +1,5 @@
 package com.gmail.pkr4mer.glooputil;
 
-import GLOOP.*;
-
 /**
  * GloopUtil ist eine winzige Library, die zur Vereinfachung der Erstellung von Objekten in Gloop dient.
  * 

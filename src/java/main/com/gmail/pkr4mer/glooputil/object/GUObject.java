@@ -5,11 +5,11 @@ import GLOOP.GLTextur;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
-import com.jogamp.graph.math.Quaternion;
+import com.gmail.pkr4mer.util.ReflectionUtilities;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by Jonas on 24.01.14.
@@ -18,7 +18,8 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     protected GLObjekt glo;
     protected Scene scene;
-    protected Quaternion rot;
+
+    protected Vector direction;
 
     protected String tag;
     protected String name;
@@ -31,13 +32,10 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     {
         glo = g;                                // The "(proto)type" of GUObject
         scene = s;                              // The scene the GUObject is in
+        direction = dir;
         tag = t;                                // The tag of the GUObject
         name = n;                               // The GUObject's name
         scripts = new ArrayList<GUScript>();    // The Scripts of the GUObject
-        rot = new Quaternion(new float[]{0,0,0}, new float[]{1,0,0});
-        rot.setX((float)dir.getX());
-        rot.setY((float)dir.getY());
-        rot.setZ((float)dir.getZ());
     }
 
     public String getName() // Returns the GUObject's name
@@ -61,12 +59,13 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     public void setPosition(Vector pPosition){  // Sets the GUObject's position to the given vector
         glo.setzePosition(pPosition.getX(), pPosition.getY(), pPosition.getZ());
     }
-    public void rotate(double y){ // Rotates the GUObject by the given arguments
-        double rx = (rot.getX() * Math.cos(y)) - (rot.getY() * Math.sin(y));
-        double ry = (rot.getX() * Math.sin(y)) + (rot.getY() * Math.cos(y));
-        rot.setX((float)rx);
-        rot.setY((float)ry);
-        //fixRotation();
+    public void rotate(double x, double y, double z) // Rotates the GUObject by the given arguments
+    {
+        glo.drehe(x,y,z);
+    }
+    public void rotate(Vector v)  // Rotates the GUObject by the given argumentss
+    {
+        rotate(v.getX(),v.getY(),v.getZ());
     }
 
     @Deprecated
@@ -107,16 +106,9 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         glo.rotiere(pDegrees, pDirection.toGLVektor(), pLocation.toGLVektor());
     }
 
-    public void setRotation(double pDx, double pDy, double pDz){    // Sets the GUObject's rotation to the given degrees
-        rot.setX((float)pDx);
-        rot.setY((float)pDy);
-        rot.setZ((float)pDz);
-        //fixRotation();
-    }
-
-    private void setGLRotation(Vector rotation) // Staff only :P
+    public void setRotation(double pDx, double pDy, double pDz)    // Sets the GUObject's rotation to the given degrees
     {
-        glo.setzeDrehung(rotation.getX(), rotation.getY(), rotation.getZ());
+        glo.setzeDrehung(pDx,pDy,pDz);
     }
     
     public void setColor(double pR, double pG, double pB){  // Sets the GUObject's color to the given RGB-values
@@ -147,61 +139,32 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         glo.verschiebe(pVec.toGLVektor());
     }
 
-    public void setTexture(String pFilename){   // Sets the GUObject's texture to the given filename
+    public void setTexture(String pFilename) // Sets the GUObject's texture to the given filename
+    {
         glo.setzeTextur(pFilename);
     }
 
-    public Quaternion getRotation() // Returns the GUObject's rotation
+    public Vector getRotation() // Returns the GUObject's rotation
     {
-        return new Quaternion(rot.getX(),rot.getY(),rot.getZ(),rot.getW());
+        return new Vector(getRotX(),getRotY(),getRotZ());
     }
 
-    public void setRotation(Vector rotation)    // Sets the GUObject's rotation to the given vector
+    public void setRotation(Vector v)    // Sets the GUObject's rotation to the given vector
     {
-        rot.setX((float)rotation.getX());
-        rot.setY((float)rotation.getY());
-        rot.setZ((float)rotation.getZ());
+        glo.setzeDrehung(v.getX(),v.getY(),v.getZ());
     }
 
     public Vector getForward()  // Returns the GUObject's forward-pointing vector
     {
-        return new Vector(rot.getX(),rot.getY(),rot.getZ());
+        Vector v = new Vector(0,0,1);
+        v.multiply(1/v.magnitude());
+        return v;
     }
 
     public void forward(double distance)    // Moves the GUObject forward by the given distance
     {
         move(getForward().multiply(distance));
     }
-
-    /*private void fixRotation()  // Fixes the rotation values
-    {
-        while( rotation.getX() > 360 )
-        {
-            rotation.setX(rotation.getX()-360);
-        }
-        while(rotation.getX() < 0 )
-        {
-            rotation.setX(rotation.getX()+360);
-        }
-
-        while( rotation.getY() > 360 )
-        {
-            rotation.setY(rotation.getY() - 360);
-        }
-        while(rotation.getY() < 0 )
-        {
-            rotation.setY(rotation.getY() + 360);
-        }
-
-        while( rotation.getZ() > 360 )
-        {
-            rotation.setZ(rotation.getZ() - 360);
-        }
-        while(rotation.getZ() < 0 )
-        {
-            rotation.setZ(rotation.getZ() + 360);
-        }
-    }*/
     public void resetDisplayList(){ // Resets the display list
         glo.resetDisplayliste();
     }
@@ -214,7 +177,6 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     public void fixedUpdate()   // Activates the scripts
     {
-        glo.setzeDrehung(rot.getX(),rot.getY(),rot.getZ());
         for(GUScript gus : scripts) gus.fixedUpdate();
     }
 
@@ -237,5 +199,110 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     public void setSelfIlluminating(double pR, double pG, double pB){   // Sets the GUObject's self illuminating to the given RGC-color
         glo.setzeSelbstleuchten(pR, pG, pB);
+    }
+
+    public double getScale()
+    {
+        try {
+            return (double) ReflectionUtilities.getValue(glo,"zSkalierung");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    public double getScaleX()
+    {
+        Class<?> cls = glo.getClass();
+        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
+        {
+            cls = cls.getSuperclass();
+        }
+        try {
+            Field field = cls.getDeclaredField("zScaleX");
+            field.setAccessible(true);
+            return (float) field.get(glo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    public double getScaleY()
+    {
+        Class<?> cls = glo.getClass();
+        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
+        {
+            cls = cls.getSuperclass();
+        }
+        try {
+            Field field = cls.getDeclaredField("zScaleY");
+            field.setAccessible(true);
+            return (float) field.get(glo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    public double getScaleZ()
+    {
+        Class<?> cls = glo.getClass();
+        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
+        {
+            cls = cls.getSuperclass();
+        }
+        try {
+            Field field = cls.getDeclaredField("zScaleZ");
+            field.setAccessible(true);
+            return (float) field.get(glo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    private float[] getMatrix()
+    {
+        Class<?> cls = glo.getClass();
+        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
+        {
+            cls = cls.getSuperclass();
+        }
+        try {
+            Field field = cls.getDeclaredField("zMatrix");
+            field.setAccessible(true);
+            return (float[]) field.get(glo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //TODO richtige Teile der Matrix finden.
+
+    public float getRotX()
+    {
+        return (float)Math.toDegrees(getMatrix()[12]);
+    }
+
+    public float getRotY()
+    {
+        return (float)Math.toDegrees(getMatrix()[13]);
+    }
+
+    public float getRotZ()
+    {
+        return (float)Math.toDegrees(getMatrix()[14]);
+    }
+
+    public void debugMatrix()
+    {
+        int i = 0;
+        for( float f : getMatrix() )
+        {
+            System.out.println(i + "=" + f);
+            i++;
+        }
     }
 }
