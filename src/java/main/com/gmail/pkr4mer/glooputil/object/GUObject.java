@@ -205,10 +205,6 @@ public class GUObject {
         glo.setzeSichtbarkeit(pV);
     }
 
-    /*public void setTexture(GUTexture pTex){
-        glo.setzeTextur(pTex);
-    }*/
-
     public void fixedUpdate()
     {
         setGLRotation(rotation);
