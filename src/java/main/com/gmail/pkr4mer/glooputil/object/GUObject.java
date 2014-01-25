@@ -17,10 +17,10 @@ public class GUObject {
 
     protected GLObjekt glo;
     protected Scene scene;
+    protected Vector rotation;
 
     protected String tag;
     protected String name;
-    protected Vector rotation;
 
     private List<GUScript> scripts;
 
@@ -30,9 +30,9 @@ public class GUObject {
     {
         glo = g;
         scene = s;
+        rotation = dir;
         tag = t;
         name = n;
-        rotation = dir;
         scripts = new ArrayList<GUScript>();
     }
 
@@ -65,13 +65,11 @@ public class GUObject {
     @Deprecated
     public void turnAround(Vector rot, Vector pt){
         glo.drehe(rot.getX(), rot.getY(), rot.getZ(), pt.getX(), pt.getY(), pt.getZ());
-        //TODO eigene neuberechnung der Rotation
     }
 
     @Deprecated
     public void turnAround(double pDx, double pDy, double pDz, Vector pt){
         glo.drehe(pDx, pDy, pDz, pt.getX(), pt.getX(), pt.getZ());
-        //TODO eigene neuberechnung der Rotation
     }
 
     public Vector getPosition(){
@@ -100,7 +98,6 @@ public class GUObject {
     }
     public void rotate(double pDegrees, Vector pDirection, Vector pLocation){
         glo.rotiere(pDegrees, pDirection.toGLVektor(), pLocation.toGLVektor());
-        //TODO lokale neuberechnung
     }
 
     public void setRotation(double pDx, double pDy, double pDz){
@@ -221,5 +218,21 @@ public class GUObject {
     public void addScript(GUScript script)
     {
         scripts.add(script);
+    }
+
+    public void setTexture(GUTexture pTex){
+        glo.setzeTextur(pTex);
+    }
+
+    public void setLance(double pR, double pG, double pB, int pStrength){
+        glo.setzeGlanz(pR, pG, pB, pStrength);
+    }
+
+    public void setMaterial(float[][] pm){
+        glo.setzeMaterial(pm);
+    }
+    
+    public void setSelfIlluminating(double pR, double pG, double pB){
+        glo.setzeSelbstleuchten(pR, pG, pB);
     }
 }
