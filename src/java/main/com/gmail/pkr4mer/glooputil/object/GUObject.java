@@ -224,14 +224,14 @@ public class GUObject {
         glo.setzeTextur(pTex);
     }
 
-    public void setLance(double pR, double pG, double pB, int pStrength){
+    public void setShininess(double pR, double pG, double pB, int pStrength){
         glo.setzeGlanz(pR, pG, pB, pStrength);
     }
 
     public void setMaterial(float[][] pm){
         glo.setzeMaterial(pm);
     }
-    
+
     public void setSelfIlluminating(double pR, double pG, double pB){
         glo.setzeSelbstleuchten(pR, pG, pB);
     }
