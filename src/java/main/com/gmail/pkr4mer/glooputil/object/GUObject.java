@@ -5,6 +5,7 @@ import GLOOP.GLTextur;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
+import com.jogamp.graph.math.Quaternion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     protected GLObjekt glo;
     protected Scene scene;
-    protected Vector rotation;
+    protected Quaternion rot;
 
     protected String tag;
     protected String name;
@@ -30,10 +31,13 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     {
         glo = g;                                // The "(proto)type" of GUObject
         scene = s;                              // The scene the GUObject is in
-        rotation = dir;                         // The rotation of the GUObject
         tag = t;                                // The tag of the GUObject
         name = n;                               // The GUObject's name
         scripts = new ArrayList<GUScript>();    // The Scripts of the GUObject
+        rot = new Quaternion(new float[]{0,0,0}, new float[]{1,0,0});
+        rot.setX((float)dir.getX());
+        rot.setY((float)dir.getY());
+        rot.setZ((float)dir.getZ());
     }
 
     public String getName() // Returns the GUObject's name
@@ -57,9 +61,12 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     public void setPosition(Vector pPosition){  // Sets the GUObject's position to the given vector
         glo.setzePosition(pPosition.getX(), pPosition.getY(), pPosition.getZ());
     }
-    public void rotate(double pDx, double pDy, double pDz){ // Rotates the GUObject by the given arguments
-        rotation.add(new Vector(pDx, pDy, pDz));
-        fixRotation();
+    public void rotate(double y){ // Rotates the GUObject by the given arguments
+        double rx = (rot.getX() * Math.cos(y)) - (rot.getY() * Math.sin(y));
+        double ry = (rot.getX() * Math.sin(y)) + (rot.getY() * Math.cos(y));
+        rot.setX((float)rx);
+        rot.setY((float)ry);
+        //fixRotation();
     }
 
     @Deprecated
@@ -101,13 +108,15 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     }
 
     public void setRotation(double pDx, double pDy, double pDz){    // Sets the GUObject's rotation to the given degrees
-        rotation = new Vector(pDx, pDy, pDz);
-        fixRotation();
+        rot.setX((float)pDx);
+        rot.setY((float)pDy);
+        rot.setZ((float)pDz);
+        //fixRotation();
     }
 
     private void setGLRotation(Vector rotation) // Staff only :P
     {
-        glo.setzeDrehung(rotation.getX(),rotation.getY(),rotation.getZ());
+        glo.setzeDrehung(rotation.getX(), rotation.getY(), rotation.getZ());
     }
     
     public void setColor(double pR, double pG, double pB){  // Sets the GUObject's color to the given RGB-values
@@ -142,23 +151,21 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         glo.setzeTextur(pFilename);
     }
 
-    public Vector getRotation() // Returns the GUObject's rotation
+    public Quaternion getRotation() // Returns the GUObject's rotation
     {
-        return rotation.clone();
+        return new Quaternion(rot.getX(),rot.getY(),rot.getZ(),rot.getW());
     }
 
     public void setRotation(Vector rotation)    // Sets the GUObject's rotation to the given vector
     {
-        glo.setzeDrehung(rotation.getX(), rotation.getY(), rotation.getZ());
+        rot.setX((float)rotation.getX());
+        rot.setY((float)rotation.getY());
+        rot.setZ((float)rotation.getZ());
     }
 
     public Vector getForward()  // Returns the GUObject's forward-pointing vector
     {
-        return new Vector(
-                Math.tan(rotation.getX()),
-                Math.tan(rotation.getY()),
-                Math.tan(rotation.getZ())
-            );
+        return new Vector(rot.getX(),rot.getY(),rot.getZ());
     }
 
     public void forward(double distance)    // Moves the GUObject forward by the given distance
@@ -166,7 +173,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         move(getForward().multiply(distance));
     }
 
-    private void fixRotation()  // Fixes the rotation values
+    /*private void fixRotation()  // Fixes the rotation values
     {
         while( rotation.getX() > 360 )
         {
@@ -194,7 +201,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         {
             rotation.setZ(rotation.getZ() + 360);
         }
-    }
+    }*/
     public void resetDisplayList(){ // Resets the display list
         glo.resetDisplayliste();
     }
@@ -207,7 +214,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     public void fixedUpdate()   // Activates the scripts
     {
-        setGLRotation(rotation);
+        glo.setzeDrehung(rot.getX(),rot.getY(),rot.getZ());
         for(GUScript gus : scripts) gus.fixedUpdate();
     }
 

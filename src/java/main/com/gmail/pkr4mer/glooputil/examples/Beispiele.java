@@ -19,19 +19,18 @@ public class Beispiele
             @Override
             public void build()
             {
-                GUPrismoid cone = createCylinder(new double[]{5, 5, 5}, new double[]{10, 10, 10}, Axis.Z);
+                GUPrismoid cone = createCylinder(new double[]{5, 5, 5}, new double[]{10, 10, 10}, Axis.Y);
                 System.out.println("cube '" + cone.getName() + "' " + cone);
                 new GLLicht();
-                cone.rotate(0,20,0);
+                cone.rotate(45);
                 new GLSchwenkkamera().zeigeAchsen(true);
-                new GLQuader(-1,0,-1,1,0.01,1);
                 cone.addScript(
                     new GUScript(cone)
                     {
                         @Override
                         public void fixedUpdate()
                         {
-                            getGuObject().forward(1);
+                            //getGuObject().forward(1);
                             System.out.println("My position: " + getGuObject().getPosition());
                         }
                     });
@@ -40,7 +39,7 @@ public class Beispiele
             @Override
             public void update()
             {
-                GUPrismoid prism = (GUPrismoid) findObject("prism");
+
             }
         };
     }
