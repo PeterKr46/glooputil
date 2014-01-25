@@ -16,4 +16,9 @@ public abstract class GUScript
 
     public abstract void fixedUpdate();
 
+    public final GUObject getGuObject()
+    {
+        return guObject;
+    }
+
 }

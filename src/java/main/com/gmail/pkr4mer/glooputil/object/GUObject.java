@@ -75,7 +75,7 @@ public class GUObject {
     }
 
     public Vector getPosition(){
-        return new Vector (glo.gibX(), glo.gibY(), glo.gibZ());
+        return Vector.fromGLVector(glo.gibPosition());
     }
 
     public GLTextur getTexture(){
@@ -216,5 +216,10 @@ public class GUObject {
     {
         setGLRotation(rotation);
         for(GUScript gus : scripts) gus.fixedUpdate();
+    }
+
+    public void addScript(GUScript script)
+    {
+        scripts.add(script);
     }
 }

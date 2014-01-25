@@ -16,6 +16,11 @@ public class Vector
         return new Vector(0,0,1);
     }
 
+    public static Vector fromGLVector(GLVektor glv)
+    {
+        return new Vector(glv.x, glv.y, glv.z);
+    }
+
     private double x,y,z;
 
     public Vector(double x, double y, double z)
