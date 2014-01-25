@@ -52,9 +52,9 @@ public abstract class Scene
       
     private GUCamera createCamera(double x, double y, double z)
     {
-        camera = new GUCamera(new GLKamera(),this);
-        camera.setPosition(x, y, z);
-        camera.setTargetPoint(new Vector(0,0,0));
+        //camera = new GUCamera(new GLKamera(),this);
+        //camera.setPosition(x, y, z);
+        //camera.setTargetPoint(new Vector(0,0,0));
         return camera;
     }
 
@@ -63,13 +63,14 @@ public abstract class Scene
         return camera;
     }
 
-    public GUPrismoid createPrismoid(double[] edge1, double[] edge2, int seiten, float rad2, Axis direction)
+    public GUPrismoid createPrismoid(double[] edge1, double[] edge2, int verts, float rad2, Axis direction)
     {
         double[][] edges = Util.sortiere(edge1, edge2);
         edge1 = edges[0];
         edge2 = edges[1];
-        GLPrismoid prismoid = new GLPrismoid(0,0,0,1,rad2,seiten,1);
+        GLPrismoid prismoid = new GLPrismoid(0,0,0,1,rad2,verts,1);
         Vector rotation = new Vector(0,0,0);
+        GUPrismoid prism;
         if( direction == Axis.Y )
         {
             prismoid.drehe(270,0,0);
@@ -78,8 +79,9 @@ public abstract class Scene
             double width = edge2[0] - edge1[0];
             double depth = edge2[2] - edge1[2];
             double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prismoid.setzePosition(center[0],center[1],center[2]);
-            prismoid.skaliere(width*0.5,depth*0.5,height);
+            prism = new GUPrismoid(this,prismoid,rotation,null,getAvailableName("prism"));
+            prism.setPosition(center[0],center[1],center[2]);
+            prism.scale(width*0.5,depth*0.5,height);
         }
         else if( direction == Axis.Z )
         {
@@ -87,10 +89,11 @@ public abstract class Scene
             double width = edge2[0] - edge1[0];
             double depth = edge2[2] - edge1[2];
             double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prismoid.setzePosition(center[0],center[1],center[2]);
-            prismoid.skaliere(width*0.5,height*0.5,depth);
+            prism = new GUPrismoid(this,prismoid,rotation,null,getAvailableName("prism"));
+            prism.setPosition(center[0],center[1],center[2]);
+            prism.scale(width*0.5,height*0.5,depth);
         }
-        else if( direction == Axis.X )
+        else
         {
             prismoid.drehe(0,90,0);
             rotation.setY(90);
@@ -98,10 +101,10 @@ public abstract class Scene
             double width = edge2[0] - edge1[0];
             double depth = edge2[2] - edge1[2];
             double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prismoid.setzePosition(center[0],center[1],center[2]);
-            prismoid.skaliere(depth*0.5,height*0.5,width);
+            prism = new GUPrismoid(this,prismoid,rotation,null,getAvailableName("prism"));
+            prism.setPosition(center[0],center[1],center[2]);
+            prism.scale(depth*0.5,height*0.5,width);
         }
-        GUPrismoid prism = new GUPrismoid(this,prismoid,rotation,null,getAvailableName("prism"));
         objects.put(prism.getName(),prism);
         return prism;
     }
@@ -121,9 +124,9 @@ public abstract class Scene
         return createPrismoid(edge1, edge2, 100, direction);
     }
 
-    public GUPrismoid createPrismoid(double[] edge1, double[] edge2, int seiten, Axis direction)
+    public GUPrismoid createPrismoid(double[] edge1, double[] edge2, int verts, Axis direction)
     {
-        return createPrismoid(edge1,edge2,seiten,1.0f,direction);
+        return createPrismoid(edge1,edge2,verts,1.0f,direction);
     }
 
     public GUCube createCube(double[] edge1, double[] edge2)

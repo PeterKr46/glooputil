@@ -33,7 +33,8 @@ public class GUObject {
         rotation = dir;
         tag = t;
         name = n;
-        scripts = new ArrayList<GUScript>();
+        scripts = new ArrayList<>();
+        setVisible(true);
     }
 
     public String getName()
@@ -155,9 +156,9 @@ public class GUObject {
     public Vector getForward()
     {
         return new Vector(
-                Math.tan(Math.toRadians(rotation.getX())),
-                Math.tan(Math.toRadians(rotation.getZ())),
-                Math.tan(Math.toRadians(rotation.getY()))
+                Math.tan(rotation.getX()),
+                Math.tan(rotation.getY()),
+                Math.tan(rotation.getZ())
             );
     }
 
@@ -204,10 +205,6 @@ public class GUObject {
     public void setVisible(boolean pV){
         glo.setzeSichtbarkeit(pV);
     }
-
-    /*public void setTexture(GUTexture pTex){
-        glo.setzeTextur(pTex);
-    }*/
 
     public void fixedUpdate()
     {
