@@ -43,6 +43,10 @@ public abstract class Scene
         {
             Thread.sleep(50L);
             update();
+            for( GUObject o : objects.values() )
+            {
+                o.fixedUpdate();
+            }
         }
     }
       

@@ -3,7 +3,11 @@ package com.gmail.pkr4mer.glooputil.object;
 import GLOOP.GLObjekt;
 import GLOOP.GLTextur;
 import com.gmail.pkr4mer.glooputil.Scene;
+import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -18,6 +22,8 @@ public class GUObject {
     protected String name;
     protected Vector rotation;
 
+    private List<GUScript> scripts;
+
     protected boolean valid = true;
 
     public GUObject(GLObjekt g, Scene s, String t, String n, Vector dir)
@@ -27,6 +33,7 @@ public class GUObject {
         tag = t;
         name = n;
         rotation = dir;
+        scripts = new ArrayList<GUScript>();
     }
 
     public String getName()
@@ -51,70 +58,89 @@ public class GUObject {
         glo.setzePosition(pPosition.getX(), pPosition.getY(), pPosition.getZ());
     }
     public void rotate(double pDx, double pDy, double pDz){
-        glo.drehe(pDx, pDy, pDz);
-        rotation.add(new Vector(pDx,pDy,pDz));
+        rotation.add(new Vector(pDx, pDy, pDz));
         fixRotation();
     }
+
+    @Deprecated
     public void turnAround(Vector rot, Vector pt){
         glo.drehe(rot.getX(), rot.getY(), rot.getZ(), pt.getX(), pt.getY(), pt.getZ());
         //TODO eigene neuberechnung der Rotation
     }
+
+    @Deprecated
     public void turnAround(double pDx, double pDy, double pDz, Vector pt){
         glo.drehe(pDx, pDy, pDz, pt.getX(), pt.getX(), pt.getZ());
         //TODO eigene neuberechnung der Rotation
     }
+
     public Vector getPosition(){
         return new Vector (glo.gibX(), glo.gibY(), glo.gibZ());
     }
+
     public GLTextur getTexture(){
         return glo.gibTextur();
     }
-    public float getX(){
+
+    public double getX(){
         return glo.gibX();
     }
-    public float getY(){
+
+    public double getY(){
         return glo.gibY();
     }
-    public float getZ(){
+
+    public double getZ(){
         return glo.gibZ();
     }
+
     public void delete(){
         glo.loesche();
         valid = false; //TODO dieses Objekt muss auf Scene zugreifen und sich löschen
-    }
-    public void rotate(double pDegrees, double pNX, double pNY, double pNZ, double pRX, double pRY, double pRZ){
-        glo.rotiere(pDegrees, pNX, pNY, pNZ, pRX, pRY, pRZ);
     }
     public void rotate(double pDegrees, Vector pDirection, Vector pLocation){
         glo.rotiere(pDegrees, pDirection.toGLVektor(), pLocation.toGLVektor());
         //TODO lokale neuberechnung
     }
+
     public void setRotation(double pDx, double pDy, double pDz){
-        glo.setzeDrehung(pDx, pDy, pDz);
         rotation = new Vector(pDx, pDy, pDz);
         fixRotation();
     }
+
+    private void setGLRotation(Vector rotation)
+    {
+        glo.setzeDrehung(rotation.getX(),rotation.getY(),rotation.getZ());
+    }
+    
     public void setColor(double pR, double pG, double pB){
         glo.setzeFarbe(pR, pG, pB);
     }
+
     public void setScale(double pG){
         glo.setzeSkalierung(pG);
     }
+
     public void setScale(double pX, double pY, double pZ){
         glo.setzeSkalierung(pX, pY, pZ);
     }
+
     public void scale(double pG){
         glo.skaliere(pG);
     }
+
     public void scale(double pX, double pY, double pZ){
         glo.skaliere(pX, pY, pZ);
     }
+
     public void move(double pX, double pY, double pZ){
         glo.verschiebe(pX, pY, pZ);
     }
+
     public void move(Vector pVec){
         glo.verschiebe(pVec.toGLVektor());
     }
+
     public void setTexture(String pFilename){
         glo.setzeTextur(pFilename);
     }
@@ -181,7 +207,14 @@ public class GUObject {
     public void setVisible(boolean pV){
         glo.setzeSichtbarkeit(pV);
     }
+
     /*public void setTexture(GUTexture pTex){
         glo.setzeTextur(pTex);
     }*/
+
+    public void fixedUpdate()
+    {
+        setGLRotation(rotation);
+        for(GUScript gus : scripts) gus.fixedUpdate();
+    }
 }
