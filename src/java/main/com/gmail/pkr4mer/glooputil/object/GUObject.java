@@ -50,9 +50,6 @@ public class GUObject {
     public void setPosition(Vector pPosition){
         glo.setzePosition(pPosition.getX(), pPosition.getY(), pPosition.getZ());
     }
-    public void turn(double pDx, double pDy, double pDz){
-        glo.drehe(pDx, pDy, pDz);
-    }
     public void rotate(double pDx, double pDy, double pDz){
         glo.drehe(pDx, pDy, pDz);
         rotation.add(new Vector(pDx,pDy,pDz));
@@ -62,14 +59,8 @@ public class GUObject {
         glo.drehe(rot.getX(), rot.getY(), rot.getZ(), pt.getX(), pt.getY(), pt.getZ());
         //TODO eigene neuberechnung der Rotation
     }
-    public void turn(double pDx, double pDy, double pDz, double px, double py, double pz){
-        glo.drehe(pDx, pDy, pDz, px, py, pz);
-    }
-    public void turn(double pDx, double pDy, double pDz, Vector pPoint){
-        glo.drehe(pDx, pDy, pDz, pPoint.getX(), pPoint.getX(), pPoint.getZ());
-    }
-    public void turnAround(double pWx, double pWy, double pWz, Vector pt){
-        glo.drehe(pWx, pWy, pWz, pt.getX(), pt.getX(), pt.getZ());
+    public void turnAround(double pDx, double pDy, double pDz, Vector pt){
+        glo.drehe(pDx, pDy, pDz, pt.getX(), pt.getX(), pt.getZ());
         //TODO eigene neuberechnung der Rotation
     }
     public Vector getPosition(){
@@ -98,9 +89,9 @@ public class GUObject {
         glo.rotiere(pDegrees, pDirection.toGLVektor(), pLocation.toGLVektor());
         //TODO lokale neuberechnung
     }
-    public void setRotation(double pWX, double pWY, double pWZ){
-        glo.setzeDrehung(pWX, pWY, pWZ);
-        rotation = new Vector(pWX, pWY, pWZ);
+    public void setRotation(double pDx, double pDy, double pDz){
+        glo.setzeDrehung(pDx, pDy, pDz);
+        rotation = new Vector(pDx, pDy, pDz);
         fixRotation();
     }
     public void setColor(double pR, double pG, double pB){
@@ -190,7 +181,7 @@ public class GUObject {
     public void setVisible(boolean pV){
         glo.setzeSichtbarkeit(pV);
     }
-    /*public void setTexture(GUTextur pTex){
+    /*public void setTexture(GUTexture pTex){
         glo.setzeTextur(pTex);
     }*/
 }
