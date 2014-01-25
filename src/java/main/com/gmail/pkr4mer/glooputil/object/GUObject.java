@@ -184,7 +184,7 @@ public class GUObject {
     public void setLance(double pR, double pG, double pB, int pStrength){
         glo.setzeGlanz(pR, pG, pB, pStrength);
     }
-    public void setLance(float[][] pm){
+    public void setMaterial(float[][] pm){
         glo.setzeMaterial(pm);
     }
     public void setSelfIlluminating(double pR, double pG, double pB){
