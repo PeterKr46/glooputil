@@ -7,6 +7,7 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 /**
  * Created by peter on 1/24/14.
@@ -94,7 +95,7 @@ public abstract class Scene
 
     private void updateRenderDistance()
     {
-        for( GUObject o : objects.values() )
+        for( GUObject o : new ArrayList<>(objects.values()) )
         {
             if( getCamera().getPosition().distance(o.getPosition()) > renderDistance )
             {
