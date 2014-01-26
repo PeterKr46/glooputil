@@ -9,21 +9,19 @@ public abstract class GUScript
 {
     private GUObject guObject;
 
-    public GUScript()
-    {
+    public GUScript() {}
 
-    }
-
-    public void setGUObject(GUObject o)
+    public final void setGUObject(GUObject o)
     {
         this.guObject = o;
     }
 
     public abstract void fixedUpdate();
 
-    public final GUObject getGuObject()
+    public final GUObject getGUObject()
     {
         return guObject;
     }
 
+    public abstract String getTypeName();
 }

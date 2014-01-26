@@ -120,4 +120,41 @@ public class Vector
         if( c < 0 ) c *= -1;
         return a*a + b*b + c*c;
     }
+
+    public double getAngle(Vector other)
+    {
+        return getAngle(this,other);
+    }
+
+    public static double getAngle(Vector a, Vector b)
+    {
+        // a * b
+        double top = (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+        // |a|
+        double sumA = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
+        // |b|
+        double sumB = Math.sqrt(b.x*b.x + b.y*b.y + b.z*b.z);
+        double total = top / (sumA * sumB);
+        return Math.acos(Math.toRadians(total))*180/Math.PI;
+    }
+
+    public Vector difference(Vector v)
+    {
+        return new Vector(v.x - x, v.y - y, v.z - z);
+    }
+
+    public Vector extractX()
+    {
+        return new Vector(x,0,0);
+    }
+
+    public Vector extractY()
+    {
+        return new Vector(0,y,0);
+    }
+
+    public Vector extractZ()
+    {
+        return new Vector(0,0,z);
+    }
 }

@@ -16,6 +16,7 @@ public abstract class Scene
     private CaseInsensitiveMap<GUObject> objects;
     private boolean running;
     private GUCamera camera;
+    private GLTastatur keyboard;
     private double renderDistance;
 
     public Scene()
@@ -24,6 +25,7 @@ public abstract class Scene
         running = true;
         renderDistance = 50.0;
         createCamera(0, 0, 0);
+        keyboard = new GLTastatur();
         build();
         try {
             renderDistanceThread();
@@ -94,18 +96,18 @@ public abstract class Scene
 
     private void updateRenderDistance()
     {
+        /* Temporarily disabled
         for( GUObject o : objects.values() )
         {
             if( getCamera().getPosition().distance(o.getPosition()) > renderDistance )
             {
-                System.out.println(o.getName() + " - " + getCamera().getPosition().distance(o.getPosition()));
                 o.setVisible(false);
             }
             else
             {
                 o.setVisible(true);
             }
-        }
+        } */
     }
       
     private GUCamera createCamera(double x, double y, double z)
@@ -120,6 +122,14 @@ public abstract class Scene
     public GUCamera getCamera()
     {
         return camera;
+    }
+
+    public GULight createLight(Vector pos)
+    {
+        GLLicht light = new GLLicht(pos.getX(),pos.getY(),pos.getZ());
+        GULight l = new GULight(light,this,null,getAvailableName("light"),Vector.zero());
+        objects.put(l.getName(),l);
+        return l;
     }
 
     public GUPrismoid createPrismoid(double[] edge1, double[] edge2, int verts, float rad2, Axis direction)
@@ -248,5 +258,32 @@ public abstract class Scene
         {
             System.out.println(key + " = " + objects.get(key));
         }
+    }
+
+    public boolean isKeyPressed(String key)
+    {
+        if(key.length() == 1)
+        {
+            return keyboard.istGedrueckt(key.charAt(0));
+        }
+        if(key.equalsIgnoreCase("ctrl")) return keyboard.strg();
+        if(key.equalsIgnoreCase("alt")) return keyboard.alt();
+        if(key.equalsIgnoreCase("enter")) return keyboard.enter();
+        if(key.equalsIgnoreCase("esc")) return keyboard.esc();
+        if(key.equalsIgnoreCase("del")) return keyboard.backspace();
+        if(key.equalsIgnoreCase("shift")) return keyboard.shift();
+        if(key.equalsIgnoreCase("up")) return keyboard.oben();
+        if(key.equalsIgnoreCase("down")) return keyboard.unten();
+        if(key.equalsIgnoreCase("left")) return keyboard.rechts();
+        if(key.equalsIgnoreCase("right")) return keyboard.links();
+        return key.equalsIgnoreCase("tab") && keyboard.tab();
+    }
+
+    public boolean rename(String name, String newName)
+    {
+        if(!isNameTaken(name) || isNameTaken(newName)) return false;
+        GUObject guo = objects.remove(name);
+        objects.put(newName,guo);
+        return guo.setName(name);
     }
 }

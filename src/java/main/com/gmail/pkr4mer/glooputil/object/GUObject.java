@@ -5,6 +5,7 @@ import GLOOP.GLTextur;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
+import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 import com.gmail.pkr4mer.util.ReflectionUtilities;
 
 import java.lang.reflect.Field;
@@ -26,7 +27,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     protected double[] defaultScales;
     protected double defaultScale;
 
-    private List<GUScript> scripts;
+    private CaseInsensitiveMap<GUScript> scripts;
 
     protected boolean valid = true;
 
@@ -40,7 +41,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         direction = dir;
         tag = t;                                // The tag of the GUObject
         name = n;                               // The GUObject's name
-        scripts = new ArrayList<GUScript>();    // The Scripts of the GUObject
+        scripts = new CaseInsensitiveMap<>();    // The Scripts of the GUObject
     }
 
     public String getName() // Returns the GUObject's name
@@ -48,9 +49,25 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         return name;
     }
 
+    public boolean setName(String name)
+    {
+        if(name.equalsIgnoreCase(getName())) return true;
+        if(scene.rename(getName(), name))
+        {
+            this.name = name;
+            return true;
+        }
+        return false;
+    }
+
     public String getTag()  // Returns the GUObject's tag
     {
         return tag;
+    }
+
+    public void setTag(String tag)
+    {
+        this.tag = tag;
     }
 
     public Scene getScene() // Returns the GUObject's scene
@@ -182,13 +199,15 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     public void fixedUpdate()   // Activates the scripts
     {
-        for(GUScript gus : scripts) gus.fixedUpdate();
+        for(GUScript gus : scripts.values()) gus.fixedUpdate();
     }
 
-    public void addScript(GUScript script)  // Adds a new script to the GUObject
+    public boolean addScript(GUScript script)  // Adds a new script to the GUObject
     {
-        scripts.add(script);
+        if(scripts.containsKey(script.getTypeName())) return false;
+        scripts.put(script.getTypeName(),script);
         script.setGUObject(this);
+        return true;
     }
 
     public void setTexture(GUTexture pTex){ // Sets the GUObject's Texture to the given GUTexture
