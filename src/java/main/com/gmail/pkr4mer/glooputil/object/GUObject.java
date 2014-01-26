@@ -23,6 +23,8 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     protected String tag;
     protected String name;
+    protected double[] defaultScales;
+    protected double defaultScale;
 
     private List<GUScript> scripts;
 
@@ -31,6 +33,9 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     public GUObject(GLObjekt g, Scene s, String t, String n, Vector dir)
     {
         glo = g;                                // The "(proto)type" of GUObject
+        defaultScales = new double[]{1,1,1};    // Create Default Scale Array
+        loadDefaultScale();
+        loadDefaultScales();
         scene = s;                              // The scene the GUObject is in
         direction = dir;
         tag = t;                                // The tag of the GUObject
@@ -116,11 +121,11 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     }
 
     public void setScale(double pS){    // Sets the GUObject's scale to the given size
-        glo.setzeSkalierung(pS);
+        glo.setzeSkalierung(pS * defaultScales[0], pS * defaultScales[1], pS * defaultScales[2]);
     }
 
     public void setScale(double pX, double pY, double pZ){  // Sets the GUObject's scale to the given arguments
-        glo.setzeSkalierung(pX, pY, pZ);
+        glo.setzeSkalierung(pX * defaultScales[0], pY * defaultScales[1], pZ * defaultScales[2]);
     }
 
     public void scale(double pS){   // Scales the GUObject by the given size
@@ -183,6 +188,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     public void addScript(GUScript script)  // Adds a new script to the GUObject
     {
         scripts.add(script);
+        script.setGUObject(this);
     }
 
     public void setTexture(GUTexture pTex){ // Sets the GUObject's Texture to the given GUTexture
@@ -201,10 +207,17 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         glo.setzeSelbstleuchten(pR, pG, pB);
     }
 
-    public double getScale()
+    public float getScale()
     {
+        Class<?> cls = glo.getClass();
+        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
+        {
+            cls = cls.getSuperclass();
+        }
         try {
-            return (double) ReflectionUtilities.getValue(glo,"zSkalierung");
+            Field field = cls.getDeclaredField("zSkalierung");
+            field.setAccessible(true);
+            return ((float) field.get(glo)) / (float)defaultScale;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,7 +234,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         try {
             Field field = cls.getDeclaredField("zScaleX");
             field.setAccessible(true);
-            return (float) field.get(glo);
+            return (float) field.get(glo) / defaultScales[0];
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -238,7 +251,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         try {
             Field field = cls.getDeclaredField("zScaleY");
             field.setAccessible(true);
-            return (float) field.get(glo);
+            return (float) field.get(glo) / defaultScales[1];
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -255,7 +268,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         try {
             Field field = cls.getDeclaredField("zScaleZ");
             field.setAccessible(true);
-            return (float) field.get(glo);
+            return (float) field.get(glo) / defaultScales[2];
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -279,8 +292,6 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         return null;
     }
 
-    //TODO richtige Teile der Matrix finden. (size = 16)
-
     public float getRotX()
     {
         return getMatrix()[8];
@@ -303,6 +314,30 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         {
             System.out.println(i + "=" + f);
             i++;
+        }
+    }
+
+    private void loadDefaultScales()
+    {
+        this.defaultScales[0] = getScaleX();
+        this.defaultScales[1] = getScaleY();
+        this.defaultScales[2] = getScaleZ();
+    }
+
+    private void loadDefaultScale()
+    {
+        Class<?> cls = glo.getClass();
+        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
+        {
+            cls = cls.getSuperclass();
+        }
+        try {
+            Field field = cls.getDeclaredField("zSkalierung");
+            field.setAccessible(true);
+            defaultScale = (float) field.get(glo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            defaultScale = 1;
         }
     }
 }

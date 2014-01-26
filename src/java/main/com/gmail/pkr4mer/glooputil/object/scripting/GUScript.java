@@ -9,9 +9,14 @@ public abstract class GUScript
 {
     private GUObject guObject;
 
-    public GUScript(GUObject guObject)
+    public GUScript()
     {
-        this.guObject = guObject;
+
+    }
+
+    public void setGUObject(GUObject o)
+    {
+        this.guObject = o;
     }
 
     public abstract void fixedUpdate();

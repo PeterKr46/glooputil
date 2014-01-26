@@ -6,6 +6,8 @@ import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by peter on 1/24/14.
  */
@@ -14,13 +16,20 @@ public abstract class Scene
     private CaseInsensitiveMap<GUObject> objects;
     private boolean running;
     private GUCamera camera;
+    private double renderDistance;
 
     public Scene()
     {
         objects = new CaseInsensitiveMap<>();
         running = true;
-        createCamera(20, 20, 20);
+        renderDistance = 50.0;
+        createCamera(0, 0, 0);
         build();
+        try {
+            renderDistanceThread();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         try {
             mainThread();
         } catch (Exception e) {
@@ -49,12 +58,62 @@ public abstract class Scene
             }
         }
     }
+
+    private void renderDistanceThread() throws Exception
+    {
+        Field worldF = Class.forName("GLOOP.GLGlobal").getDeclaredField("WELT");
+        worldF.setAccessible(true);
+        Object worldO = worldF.get(null);
+        Field threadF = worldO.getClass().getDeclaredField("syncUpdate");
+        threadF.setAccessible(true);
+        final Object threadO = threadF.get(worldO);
+        new Thread()
+        {
+            public void run()
+            {
+                while(true)
+                {
+                    try {
+                        synchronized (threadO)
+                        {
+                            updateRenderDistance();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public void setRenderDistance(double distance)
+    {
+        this.renderDistance = distance;
+    }
+
+
+    private void updateRenderDistance()
+    {
+        for( GUObject o : objects.values() )
+        {
+            if( getCamera().getPosition().distance(o.getPosition()) > renderDistance )
+            {
+                System.out.println(o.getName() + " - " + getCamera().getPosition().distance(o.getPosition()));
+                o.setVisible(false);
+            }
+            else
+            {
+                o.setVisible(true);
+            }
+        }
+    }
       
     private GUCamera createCamera(double x, double y, double z)
     {
-        //camera = new GUCamera(new GLKamera(),this);
-        //camera.setPosition(x, y, z);
-        //camera.setTargetPoint(new Vector(0,0,0));
+        System.out.println("Created Camera at " + new Vector(x,y,z));
+        camera = new GUCamera(new GLKamera(),this);
+        camera.setPosition(x, y, z);
+        camera.setTargetPoint(new Vector(0,0,0));
         return camera;
     }
 
@@ -174,7 +233,7 @@ public abstract class Scene
         int i = 0;
         do {
             i++;
-        } while(isNameTaken(name + "_i"));
+        } while(isNameTaken(name + "_" + i));
         return name + "_" + i;
     }
 

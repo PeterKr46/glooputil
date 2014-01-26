@@ -34,15 +34,18 @@ public class GUCamera
         return scene;
     }
 
-    public void setPosition(double px, double py, double pz){
-    glo.setzePosition(px, py, pz);
-}
+    public void setPosition(double px, double py, double pz)
+    {
+        glo.setzePosition(px, py, pz);
+    }
+
     public void setPosition(Vector pPosition){
         glo.setzePosition(pPosition.getX(), pPosition.getY(), pPosition.getZ());
     }
     public Vector getPosition(){
         return new Vector (glo.gibX(), glo.gibY(), glo.gibZ());
     }
+
     public double getX(){
         return glo.gibX();
     }

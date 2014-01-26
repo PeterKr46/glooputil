@@ -97,27 +97,27 @@ public class Vector
         return "Vector(" + x + "," + y + "," + z + ")";
     }
 
-    public static Vector fromQuaternion(Quaternion q)
+    public double distance(Vector v)
     {
-        return new Vector(q.getX(),q.getY(),q.getZ());
+        double a,b,c;
+        a = x - v.x;
+        b = y - v.y;
+        c = z - v.z;
+        if( a < 0 ) a *= -1;
+        if( b < 0 ) b *= -1;
+        if( c < 0 ) c *= -1;
+        return Math.sqrt(a*a + b*b + c*c);
     }
 
-    public static Quaternion create(float x1, float y1, float z1)
+    public double distanceSquared(Vector v)
     {
-        float a = (float)Math.PI*0.5f;
-        // Here we calculate the sin( theta / 2) once for optimization
-        float result = (float) Math.sin( a / 2.0f );
-
-        // Calculate the x, y and z of the quaternion
-        x1 *= result;
-        y1 *= result;
-        z1 *= result;
-
-        // Calcualte the w value by cos( theta / 2 )
-        float w = (float) Math.cos( a / 2.0f );
-
-        Quaternion q = new Quaternion(x1,y1,z1,w);
-        //q.normalize();
-        return q;
+        double a,b,c;
+        a = x - v.x;
+        b = y - v.y;
+        c = z - v.z;
+        if( a < 0 ) a *= -1;
+        if( b < 0 ) b *= -1;
+        if( c < 0 ) c *= -1;
+        return a*a + b*b + c*c;
     }
 }
