@@ -98,7 +98,6 @@ public abstract class Scene
         {
             if( getCamera().getPosition().distance(o.getPosition()) > renderDistance )
             {
-                System.out.println(o.getName() + " - " + getCamera().getPosition().distance(o.getPosition()));
                 o.setVisible(false);
             }
             else
