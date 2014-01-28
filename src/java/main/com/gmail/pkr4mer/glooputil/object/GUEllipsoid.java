@@ -2,7 +2,6 @@ package com.gmail.pkr4mer.glooputil.object;
 
 import GLOOP.GLKugel;
 import com.gmail.pkr4mer.glooputil.Scene;
-import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 1/24/14.

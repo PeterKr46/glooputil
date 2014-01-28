@@ -1,7 +1,6 @@
 package com.gmail.pkr4mer.glooputil.position;
 
 import GLOOP.GLVektor;
-import com.jogamp.graph.math.Quaternion;
 
 /**
  * Created by peter on 1/24/14.

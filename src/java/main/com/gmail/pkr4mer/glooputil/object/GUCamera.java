@@ -3,7 +3,6 @@ package com.gmail.pkr4mer.glooputil.object;
 import GLOOP.GLKamera;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUCameraScript;
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 

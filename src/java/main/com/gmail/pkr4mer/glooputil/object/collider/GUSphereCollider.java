@@ -1,6 +1,5 @@
 package com.gmail.pkr4mer.glooputil.object.collider;
 
-import com.gmail.pkr4mer.glooputil.object.GUEllipsoid;
 import com.gmail.pkr4mer.glooputil.object.GUObject;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 

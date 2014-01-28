@@ -9,7 +9,6 @@ import com.gmail.pkr4mer.glooputil.object.collider.GUSphereCollider;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
-import com.gmail.pkr4mer.util.ReflectionUtilities;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -204,7 +203,7 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     {
         glo.setzeDrehung(pDx,pDy,pDz);
     }
-    
+
     public void setColor(double pR, double pG, double pB){  // Sets the GUObject's color to the given RGB-values
         glo.setzeFarbe(pR, pG, pB);
     }

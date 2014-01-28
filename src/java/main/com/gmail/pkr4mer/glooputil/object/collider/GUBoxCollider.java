@@ -7,8 +7,15 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 /**
  * Created by peter on 1/28/14.
  */
-public class GUBoxCollider extends GUCollider
+public final class GUBoxCollider extends GUCollider
 {
+
+    private double width,height,length;
+
+    public GUBoxCollider(GUObject guo, double width, double height, double length)
+    {
+        super(guo);
+    }
 
     @Override
     public boolean contains(Vector v)
@@ -34,6 +41,12 @@ public class GUBoxCollider extends GUCollider
 
     @Override
     protected boolean checkCylinderCollision(GUCylinderCollider other)
+    {
+        return false;
+    }
+
+    @Override
+    protected boolean checkBoxCollision(GUBoxCollider other)
     {
         return false;
     }
