@@ -46,12 +46,11 @@ public class Vector
         return z;
     }
 
-    public Vector add(Vector v)
+    public void add(Vector v)
     {
         this.x += v.x;
         this.y += v.y;
         this.z += v.z;
-        return this;
     }
 
     public void setX(double x)
@@ -69,12 +68,11 @@ public class Vector
         this.z = z;
     }
 
-    public Vector multiply(double mul)
+    public void multiply(double mul)
     {
         this.x *= mul;
         this.y *= mul;
         this.z *= mul;
-        return this;
     }
 
     public GLVektor toGLVektor()
@@ -131,9 +129,9 @@ public class Vector
         // a * b
         double top = (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
         // |a|
-        double sumA = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
+        double sumA = a.magnitude();
         // |b|
-        double sumB = Math.sqrt(b.x*b.x + b.y*b.y + b.z*b.z);
+        double sumB = b.magnitude();
         double total = top / (sumA * sumB);
         return Math.acos(Math.toRadians(total))*180/Math.PI;
     }
@@ -141,6 +139,11 @@ public class Vector
     public Vector difference(Vector v)
     {
         return new Vector(v.x - x, v.y - y, v.z - z);
+    }
+
+    public Vector multiple(Vector v)
+    {
+        return new Vector(v.x * x, v.y * y, v.z * z);
     }
 
     public Vector extractX()
@@ -156,5 +159,10 @@ public class Vector
     public Vector extractZ()
     {
         return new Vector(0,0,z);
+    }
+
+    public Vector extractXZ()
+    {
+        return new Vector(x,0,z);
     }
 }

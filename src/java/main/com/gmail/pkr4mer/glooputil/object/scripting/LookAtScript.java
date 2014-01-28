@@ -16,12 +16,11 @@ public class LookAtScript extends TargetedScript
     @Override
     public void fixedUpdate()
     {
-        //TODO Skalarberechnung mit http://www.mp.haw-hamburg.de/pers/Vassilevskaya/download/m1/vektoren/skalar/richtung-1.pdf, Seite 9
         Vector d = getGUObject().getPosition().difference(getTarget().getPosition());
-        double angleZ = new Vector(d.getX(),d.getY(),0).getAngle(new Vector(0,0,1));
-        double angleY = new Vector(d.getX(),0,d.getZ()).getAngle(new Vector(1,0,0));
-        double angleX = new Vector(0,d.getY(),d.getZ()).getAngle(new Vector(1,0,0));
-        Vector requiredRotation = new Vector(angleX,angleY,angleZ);
+        double y = Math.atan(Math.toRadians(d.getX()*d.getZ()))*180/Math.PI;
+        double z = Math.atan(Math.toRadians(Math.sqrt(d.getX()*d.getX()*d.getZ()*d.getZ())*d.getY()))*180/Math.PI;
+        double x = Math.atan(Math.toRadians(d.getY()*d.getZ()))*180/Math.PI;
+        Vector requiredRotation = new Vector(x,y,z);
         System.out.println(d + " | " + requiredRotation);
         getGUObject().setRotation(requiredRotation);
     }
@@ -29,5 +28,11 @@ public class LookAtScript extends TargetedScript
     @Override
     public String getTypeName() {
         return "LookAtScript";
+    }
+
+    @Override
+    public RunPriority getRunPriority()
+    {
+        return RunPriority.HIGHEST;
     }
 }

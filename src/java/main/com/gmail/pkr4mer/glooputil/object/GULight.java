@@ -10,8 +10,8 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 public class GULight extends GUObject
 {
 
-    public GULight(GLLicht g, Scene s, String t, String n, Vector dir) {
-        super(g, s, t, n, dir);
+    public GULight(GLLicht g, Scene s, String t, String n) {
+        super(g, s, t, n);
     }
 
     protected GLLicht getLight()

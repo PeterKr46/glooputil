@@ -2,12 +2,14 @@ package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.object.*;
+import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
 import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by peter on 1/24/14.
@@ -18,21 +20,14 @@ public abstract class Scene
     private boolean running;
     private GUCamera camera;
     private GLTastatur keyboard;
-    private double renderDistance;
 
     public Scene()
     {
         objects = new CaseInsensitiveMap<>();
         running = true;
-        renderDistance = 50.0;
         createCamera(0, 0, 0);
         keyboard = new GLTastatur();
         build();
-        try {
-            renderDistanceThread();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
         try {
             mainThread();
         } catch (Exception e) {
@@ -89,11 +84,6 @@ public abstract class Scene
         }.start();
     }
 
-    public void setRenderDistance(double distance)
-    {
-        this.renderDistance = distance;
-    }
-
 
     private void updateRenderDistance()
     {
@@ -114,7 +104,7 @@ public abstract class Scene
     private GUCamera createCamera(double x, double y, double z)
     {
         System.out.println("Created Camera at " + new Vector(x,y,z));
-        camera = new GUCamera(new GLKamera(),this);
+        camera = new GUCamera(new GLKamera(360,360),this);
         camera.setPosition(x, y, z);
         camera.setTargetPoint(new Vector(0,0,0));
         return camera;
@@ -128,7 +118,7 @@ public abstract class Scene
     public GULight createLight(Vector pos)
     {
         GLLicht light = new GLLicht(pos.getX(),pos.getY(),pos.getZ());
-        GULight l = new GULight(light,this,null,getAvailableName("light"),Vector.zero());
+        GULight l = new GULight(light,this,null,getAvailableName("light"));
         objects.put(l.getName(),l);
         return l;
     }
@@ -139,17 +129,15 @@ public abstract class Scene
         edge1 = edges[0];
         edge2 = edges[1];
         GLPrismoid prismoid = new GLPrismoid(0,0,0,1,rad2,verts,1);
-        Vector rotation = new Vector(0,0,0);
         GUPrismoid prism;
         if( direction == Axis.Y )
         {
             prismoid.drehe(270,0,0);
-            rotation.setX(270);
             double height = edge2[1] - edge1[1];
             double width = edge2[0] - edge1[0];
             double depth = edge2[2] - edge1[2];
             double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prism = new GUPrismoid(this,prismoid,rotation,null,getAvailableName("prism"));
+            prism = new GUPrismoid(this,prismoid,null,getAvailableName("prism"));
             prism.setPosition(center[0],center[1],center[2]);
             prism.scale(width*0.5,depth*0.5,height);
         }
@@ -159,19 +147,18 @@ public abstract class Scene
             double width = edge2[0] - edge1[0];
             double depth = edge2[2] - edge1[2];
             double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prism = new GUPrismoid(this,prismoid,rotation,null,getAvailableName("prism"));
+            prism = new GUPrismoid(this,prismoid,null,getAvailableName("prism"));
             prism.setPosition(center[0],center[1],center[2]);
             prism.scale(width*0.5,height*0.5,depth);
         }
         else
         {
             prismoid.drehe(0,90,0);
-            rotation.setY(90);
             double height = edge2[1] - edge1[1];
             double width = edge2[0] - edge1[0];
             double depth = edge2[2] - edge1[2];
             double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prism = new GUPrismoid(this,prismoid,rotation,null,getAvailableName("prism"));
+            prism = new GUPrismoid(this,prismoid,null,getAvailableName("prism"));
             prism.setPosition(center[0],center[1],center[2]);
             prism.scale(depth*0.5,height*0.5,width);
         }
@@ -201,17 +188,17 @@ public abstract class Scene
 
     public GUCube createCube(double[] edge1, double[] edge2)
     {
-        double[][] edges = Util.sortiere(edge1, edge2);                   // Sortiere in kleine und große edge
+        double[][] edges = Util.sortiere(edge1, edge2);
         edge1 = edges[0];
         edge2 = edges[1];
-        double width = edge2[0] - edge1[0];                        // Berechne die width
-        double height = edge2[1] - edge1[1];                         // Berechne die Höhe
-        double depth = edge2[2] - edge1[2];                        // Berechne die Länge
+        double width = edge2[0] - edge1[0];                        // Calc width
+        double height = edge2[1] - edge1[1];                       // Calc height
+        double depth = edge2[2] - edge1[2];                        // Calc length
         double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-        GLQuader cube = new GLQuader(center[0],center[1],center[2], width, height, depth);
-        GUCube cb = new GUCube(this,cube,new Vector(0,0,0),null,getAvailableName("cube"));
+        GLQuader cube = new GLQuader(center[0],center[1],center[2], 1, 1, 1);
+        cube.setzeSkalierung(width,height,depth);
+        GUCube cb = new GUCube(this,cube,null,getAvailableName("cube"));
         objects.put(cb.getName(),cb);
-        System.out.println(cb + cb.getName());
         return cb;
     }
 
@@ -224,16 +211,13 @@ public abstract class Scene
         double height = ecke2[1] - ecke1[1];
         double depth = ecke2[2] - ecke1[2];
         double[] center = new double[]{ecke1[0] + width * 0.5, ecke1[1] + height * 0.5, ecke1[2] + depth * 0.5};
-        double diameter = width;
-        if( height < width ) diameter = height;
-        if( depth < diameter ) diameter = depth;
-        double radius = diameter * 0.5;
-        GLKugel sphere = new GLKugel(center[0],center[1],center[2],radius);
+        double radius = 0.5;
+        GLKugel sphere = new GLKugel(center[0],center[1],center[2],0.5);
         double skalX = (width * 0.5)/radius;
         double skalY = (height * 0.5)/radius;
         double skalZ = (depth * 0.5)/radius;
         sphere.setzeSkalierung(skalX,skalY,skalZ);
-        GUEllipsoid ellipsoid = new GUEllipsoid(this,sphere,new Vector(0,0,0),null,getAvailableName("sphere"));
+        GUEllipsoid ellipsoid = new GUEllipsoid(this,sphere,null,getAvailableName("sphere"));
         objects.put(ellipsoid.getName(),ellipsoid);
         return ellipsoid;
     }
@@ -286,5 +270,30 @@ public abstract class Scene
         GUObject guo = objects.remove(name);
         objects.put(newName,guo);
         return guo.setName(name);
+    }
+
+    public List<GUCollider> getColliders()
+    {
+        List<GUCollider> gucs = new ArrayList<>();
+        for(GUObject guo : objects.values())
+        {
+            if(guo.hasCollider())gucs.add(guo.getCollider());
+        }
+        return gucs;
+    }
+
+    public boolean destroy(String name)
+    {
+        if(!isNameTaken(name)) return false;
+        GUObject guo = objects.remove(name);
+        return guo.destroy();
+    }
+
+    public void destroy()
+    {
+        for( GUObject guo : objects.values() )
+        {
+            guo.destroy();
+        }
     }
 }

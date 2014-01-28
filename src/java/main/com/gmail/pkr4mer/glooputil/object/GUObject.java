@@ -3,6 +3,9 @@ package com.gmail.pkr4mer.glooputil.object;
 import GLOOP.GLObjekt;
 import GLOOP.GLTextur;
 import com.gmail.pkr4mer.glooputil.Scene;
+import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
+import com.gmail.pkr4mer.glooputil.object.collider.GUCylinderCollider;
+import com.gmail.pkr4mer.glooputil.object.collider.GUSphereCollider;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
@@ -10,7 +13,9 @@ import com.gmail.pkr4mer.util.ReflectionUtilities;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jonas on 24.01.14.
@@ -20,25 +25,22 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     protected GLObjekt glo;
     protected Scene scene;
 
-    protected Vector direction;
-
     protected String tag;
     protected String name;
     protected double[] defaultScales;
-    protected double defaultScale;
+
+    protected GUCollider collider;
 
     private CaseInsensitiveMap<GUScript> scripts;
 
     protected boolean valid = true;
 
-    public GUObject(GLObjekt g, Scene s, String t, String n, Vector dir)
+    public GUObject(GLObjekt g, Scene s, String t, String n)
     {
         glo = g;                                // The "(proto)type" of GUObject
         defaultScales = new double[]{1,1,1};    // Create Default Scale Array
-        loadDefaultScale();
         loadDefaultScales();
         scene = s;                              // The scene the GUObject is in
-        direction = dir;
         tag = t;                                // The tag of the GUObject
         name = n;                               // The GUObject's name
         scripts = new CaseInsensitiveMap<>();    // The Scripts of the GUObject
@@ -58,6 +60,11 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
             return true;
         }
         return false;
+    }
+
+    public ArrayList<String> getScripts()
+    {
+        return new ArrayList<>(scripts.keySet());
     }
 
     public String getTag()  // Returns the GUObject's tag
@@ -85,9 +92,71 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
     {
         glo.drehe(x,y,z);
     }
+
     public void rotate(Vector v)  // Rotates the GUObject by the given argumentss
     {
-        rotate(v.getX(),v.getY(),v.getZ());
+        rotate(v.getX(), v.getY(), v.getZ());
+    }
+
+    public boolean hasCollider()
+    {
+        return collider != null && collider.isValid();
+    }
+
+    public GUCollider getCollider()
+    {
+        return collider;
+    }
+
+    public void destroyCollider()
+    {
+        if(hasCollider())
+        {
+            collider.destroy();
+            collider = null;
+        }
+    }
+
+    public boolean addSphereCollider()
+    {
+        if(this instanceof GUEllipsoid)
+        {
+            collider = new GUSphereCollider(this,((GUEllipsoid)this).getBiggestRadius());
+        }
+        else if(this instanceof GUPrismoid)
+        {
+            collider = new GUSphereCollider(this,((GUPrismoid)this).getBiggestRadius());
+        }
+        else if(this instanceof GUCube)
+        {
+            collider = new GUSphereCollider(this,((GUCube)this).cornerDistance());
+        }
+        else
+        {
+            collider = new GUSphereCollider(this,1);
+        }
+        return false;
+    }
+
+    public boolean addCylinderCollider()
+    {
+        if(this instanceof GUEllipsoid)
+        {
+            collider = new GUCylinderCollider(this,((GUEllipsoid)this).getBiggestRadius(),((GUEllipsoid)this).getBiggestRadius());
+        }
+        else if(this instanceof GUPrismoid)
+        {
+            collider = new GUCylinderCollider(this,((GUPrismoid)this).getBiggestRadXZ(),this.getScaleY()*2);
+        }
+        else if(this instanceof GUCube)
+        {
+            collider = new GUCylinderCollider(this,((GUCube)this).getLongestDistanceXZ(),((GUCube)this).getHeight());
+        }
+        else
+        {
+            collider = new GUCylinderCollider(this,1,1);
+        }
+        return false;
     }
 
     @Deprecated
@@ -120,9 +189,12 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         return glo.gibZ();
     }
 
-    public void delete(){   // Deletes the GUObject
+    public boolean destroy(){   // Deletes the GUObject
+        if(!valid) return false;
         glo.loesche();
-        valid = false; //TODO dieses Objekt muss auf Scene zugreifen und sich löschen
+        valid = false;
+        destroyCollider();
+        return scene.destroy(getName());
     }
     public void rotate(double pDegrees, Vector pDirection, Vector pLocation){   // Rotates the GUObject by the given degrees
         glo.rotiere(pDegrees, pDirection.toGLVektor(), pLocation.toGLVektor());
@@ -145,11 +217,8 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         glo.setzeSkalierung(pX * defaultScales[0], pY * defaultScales[1], pZ * defaultScales[2]);
     }
 
-    public void scale(double pS){   // Scales the GUObject by the given size
-        glo.skaliere(pS);
-    }
-
-    public void scale(double pX, double pY, double pZ){ // Scales the GUObject by the given arguments
+    public void scale(double pX, double pY, double pZ)
+    { // Scales the GUObject by the given arguments
         glo.skaliere(pX, pY, pZ);
     }
 
@@ -185,7 +254,9 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     public void forward(double distance)    // Moves the GUObject forward by the given distance
     {
-        move(getForward().multiply(distance));
+        Vector f = getForward();
+        f.multiply(distance);
+        move(f);
     }
     public void resetDisplayList(){ // Resets the display list
         glo.resetDisplayliste();
@@ -197,9 +268,28 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         glo.setzeSichtbarkeit(pV);
     }
 
-    public void fixedUpdate()   // Activates the scripts
+    public final void fixedUpdate()   // Activates the scripts
     {
-        for(GUScript gus : scripts.values()) gus.fixedUpdate();
+        Map<Integer,List<GUScript>> ordered = new HashMap<>();
+        for(GUScript gus : scripts.values())
+        {
+            if(!ordered.containsKey(gus.getRunPriority().getValue()))
+            {
+                ordered.put(gus.getRunPriority().getValue(),new ArrayList<GUScript>());
+            }
+            ordered.get(gus.getRunPriority().getValue()).add(gus);
+        }
+        for( int lvl : GUScript.RunPriority.getValues() )
+        {
+            if(ordered.containsKey(lvl))
+            {
+                for( GUScript gus : ordered.get(lvl) )
+                {
+                    gus.fixedUpdate();
+                }
+            }
+        }
+        if(collider != null) collider.fixedUpdate();
     }
 
     public boolean addScript(GUScript script)  // Adds a new script to the GUObject
@@ -208,6 +298,16 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         scripts.put(script.getTypeName(),script);
         script.setGUObject(this);
         return true;
+    }
+
+    public boolean hasScript(String typeName)
+    {
+        return scripts.containsKey(typeName);
+    }
+
+    public GUScript getScript(String typeName)
+    {
+        return scripts.get(typeName);
     }
 
     public void setTexture(GUTexture pTex){ // Sets the GUObject's Texture to the given GUTexture
@@ -224,23 +324,6 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
 
     public void setSelfIlluminating(double pR, double pG, double pB){   // Sets the GUObject's self illuminating to the given RGC-color
         glo.setzeSelbstleuchten(pR, pG, pB);
-    }
-
-    public float getScale()
-    {
-        Class<?> cls = glo.getClass();
-        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
-        {
-            cls = cls.getSuperclass();
-        }
-        try {
-            Field field = cls.getDeclaredField("zSkalierung");
-            field.setAccessible(true);
-            return ((float) field.get(glo)) / (float)defaultScale;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 1;
     }
 
     public double getScaleX()
@@ -343,20 +426,18 @@ public class GUObject {     // This class contains all methods from GLObjekt so 
         this.defaultScales[2] = getScaleZ();
     }
 
-    private void loadDefaultScale()
+    public double getDefaultScaleX()
     {
-        Class<?> cls = glo.getClass();
-        while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
-        {
-            cls = cls.getSuperclass();
-        }
-        try {
-            Field field = cls.getDeclaredField("zSkalierung");
-            field.setAccessible(true);
-            defaultScale = (float) field.get(glo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            defaultScale = 1;
-        }
+        return defaultScales[0];
+    }
+
+    public double getDefaultScaleY()
+    {
+        return defaultScales[1];
+    }
+
+    public double getDefaultScaleZ()
+    {
+        return defaultScales[2];
     }
 }

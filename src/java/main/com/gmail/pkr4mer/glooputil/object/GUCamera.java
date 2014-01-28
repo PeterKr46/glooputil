@@ -2,7 +2,10 @@ package com.gmail.pkr4mer.glooputil.object;
 
 import GLOOP.GLKamera;
 import com.gmail.pkr4mer.glooputil.Scene;
+import com.gmail.pkr4mer.glooputil.object.scripting.GUCameraScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
+import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
 /**
  * Created by peter on 1/24/14.
@@ -11,11 +14,30 @@ public class GUCamera
 {
     private GLKamera glo;
     private Scene scene;
+    private CaseInsensitiveMap<GUCameraScript> scripts;
 
     public GUCamera(GLKamera k, Scene s)
     {
         scene = s;
         glo = k;
+    }
+
+    public boolean addScript(GUCameraScript script)  // Adds a new script to the GUObject
+    {
+        if(scripts.containsKey(script.getTypeName())) return false;
+        scripts.put(script.getTypeName(),script);
+        script.setGUCamera(this);
+        return true;
+    }
+
+    public boolean hasScript(String typeName)
+    {
+        return scripts.containsKey(typeName);
+    }
+
+    public GUCameraScript getScript(String typeName)
+    {
+        return scripts.get(typeName);
     }
 
     public void setTargetPoint(Vector vector)
@@ -26,7 +48,6 @@ public class GUCamera
     public void setShowAxes(boolean show)
     {
         glo.zeigeAchsen(show);
-        glo.zeigeFenster(true);
     }
 
     public Scene getScene()

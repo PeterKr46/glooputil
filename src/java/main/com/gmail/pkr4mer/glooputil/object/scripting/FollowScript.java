@@ -23,4 +23,9 @@ public class FollowScript extends TargetedScript
     {
         return "FollowScript";
     }
+
+    @Override
+    public RunPriority getRunPriority() {
+        return RunPriority.LOW;
+    }
 }
