@@ -2,7 +2,8 @@ glooputil
 =========
 
 A small extension for GLOOP.
-**Current features**
+
+**Current features:**
 * A scene-based framework
 * Checkboxes (WIP)
 * Localized movement
