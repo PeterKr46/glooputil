@@ -135,6 +135,11 @@ public class Vector
         return Math.acos(Math.toRadians(total))*180/Math.PI;
     }
 
+    public double[] toDoubleArray()
+    {
+        return new double[]{x,y,z};
+    }
+
     public Vector difference(Vector v)
     {
         return new Vector(v.x - x, v.y - y, v.z - z);
