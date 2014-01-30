@@ -1,6 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object.collider;
 
-import com.gmail.pkr4mer.glooputil.object.GUObject;
+import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 import java.util.ArrayList;
@@ -12,17 +12,17 @@ import java.util.List;
 public abstract class GUCollider
 {
     private List<GUCollider> collisions = new ArrayList<>();
-    private GUObject guo;
+    private Transform guo;
     private boolean valid = true;
     private Vector centerOffset;
 
-    public GUCollider(GUObject guo)
+    public GUCollider(Transform guo)
     {
         this.guo = guo;
         this.centerOffset = new Vector(0,0,0);
     }
 
-    public GUObject getGUObject()
+    public Transform getGUObject()
     {
         return guo;
     }

@@ -1,6 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object.scripting;
 
-import com.gmail.pkr4mer.glooputil.object.GUObject;
+import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
 
 /**
@@ -8,18 +8,18 @@ import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
  */
 public abstract class GUScript
 {
-    private GUObject guObject;
+    private Transform guObject;
 
     public GUScript() {}
 
-    public final void setGUObject(GUObject o)
+    public final void setGUObject(Transform o)
     {
         this.guObject = o;
     }
 
     public abstract void fixedUpdate();
 
-    public final GUObject getGUObject()
+    public final Transform getGUObject()
     {
         return guObject;
     }

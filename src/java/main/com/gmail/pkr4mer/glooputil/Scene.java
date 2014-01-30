@@ -3,6 +3,7 @@ package com.gmail.pkr4mer.glooputil;
 import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.object.*;
 import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
+import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
@@ -14,20 +15,17 @@ import java.util.List;
 /**
  * Created by peter on 1/24/14.
  */
-public abstract class Scene
+public class Scene implements ObjectHolder, ScriptHolder
 {
-    private CaseInsensitiveMap<GUObject> objects;
+    private CaseInsensitiveMap<Transform> objects;
     private boolean running;
-    private GUCamera camera;
     private GLTastatur keyboard;
 
     public Scene()
     {
         objects = new CaseInsensitiveMap<>();
         running = true;
-        createCamera(0, 0, 0);
         keyboard = new GLTastatur();
-        build();
         try {
             mainThread();
         } catch (Exception e) {
@@ -35,29 +33,12 @@ public abstract class Scene
         }
     }
 
-    public GUObject findObject(String name)
+    public Transform findObject(String name)
     {
         return objects.get(name);
     }
 
-    public abstract void build();
-
-    public abstract void update();
-
     private void mainThread() throws Exception
-    {
-        while(running)
-        {
-            Thread.sleep(50L);
-            update();
-            for( GUObject o : objects.values() )
-            {
-                o.fixedUpdate();
-            }
-        }
-    }
-
-    private void renderDistanceThread() throws Exception
     {
         Field worldF = Class.forName("GLOOP.GLGlobal").getDeclaredField("WELT");
         worldF.setAccessible(true);
@@ -72,9 +53,14 @@ public abstract class Scene
                 while(true)
                 {
                     try {
+                        Thread.sleep(50L);
                         synchronized (threadO)
                         {
-                            updateRenderDistance();
+                            runScripts();
+                            for( Transform o : new ArrayList<>(objects.values()) )
+                            {
+                                o.runScripts();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -82,37 +68,6 @@ public abstract class Scene
                 }
             }
         }.start();
-    }
-
-
-    private void updateRenderDistance()
-    {
-        /* Temporarily disabled
-        for( GUObject o : new ArrayList<>(objects.values()) )
-        {
-            if( getCamera().getPosition().distance(o.getPosition()) > renderDistance )
-            {
-                o.setVisible(false);
-            }
-            else
-            {
-                o.setVisible(true);
-            }
-        } */
-    }
-      
-    private GUCamera createCamera(double x, double y, double z)
-    {
-        System.out.println("Created Camera at " + new Vector(x,y,z));
-        camera = new GUCamera(new GLKamera(),this);
-        camera.setPosition(x, y, z);
-        camera.setTargetPoint(new Vector(0,0,0));
-        return camera;
-    }
-
-    public GUCamera getCamera()
-    {
-        return camera;
     }
 
     public GULight createLight(Vector pos)
@@ -267,7 +222,7 @@ public abstract class Scene
     public boolean rename(String name, String newName)
     {
         if(!isNameTaken(name) || isNameTaken(newName)) return false;
-        GUObject guo = objects.remove(name);
+        Transform guo = objects.remove(name);
         objects.put(newName,guo);
         return guo.setName(name);
     }
@@ -275,7 +230,7 @@ public abstract class Scene
     public List<GUCollider> getColliders()
     {
         List<GUCollider> gucs = new ArrayList<>();
-        for(GUObject guo : objects.values())
+        for(Transform guo : objects.values())
         {
             if(guo.hasCollider())gucs.add(guo.getCollider());
         }
@@ -285,15 +240,56 @@ public abstract class Scene
     public boolean destroy(String name)
     {
         if(!isNameTaken(name)) return false;
-        GUObject guo = objects.remove(name);
+        Transform guo = objects.remove(name);
         return guo.destroy();
     }
 
     public void destroy()
     {
-        for( GUObject guo : objects.values() )
+        for( Transform guo : objects.values() )
         {
             guo.destroy();
         }
+    }
+
+    @Override
+    public boolean addChild(Transform child)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean addChild(ObjectHolder child) {
+        return false;
+    }
+
+    @Override
+    public Transform getParent() {
+        return null;
+    }
+
+    @Override
+    public void runScripts() {
+
+    }
+
+    @Override
+    public GUScript getScript(String id) {
+        return null;
+    }
+
+    @Override
+    public boolean addScript(GUScript script) {
+        return false;
+    }
+
+    @Override
+    public boolean removeScript(GUScript script) {
+        return false;
+    }
+
+    @Override
+    public List<String> getScripts() {
+        return null;
     }
 }

@@ -6,7 +6,7 @@ import com.gmail.pkr4mer.glooputil.Scene;
 /**
  * Created by peter on 1/24/14.
  */
-public class GUPrismoid extends GUObject
+public class GUPrismoid extends Transform
 {
 
     public GUPrismoid(Scene scene, GLPrismoid g, String t, String n) {

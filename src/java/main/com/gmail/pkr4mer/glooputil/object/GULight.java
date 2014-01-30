@@ -6,7 +6,7 @@ import com.gmail.pkr4mer.glooputil.Scene;
 /**
  * Created by peter on 1/26/14.
  */
-public class GULight extends GUObject
+public class GULight extends Transform
 {
 
     public GULight(GLLicht g, Scene s, String t, String n) {

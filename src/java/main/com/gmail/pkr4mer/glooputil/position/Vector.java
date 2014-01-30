@@ -1,6 +1,13 @@
 package com.gmail.pkr4mer.glooputil.position;
 
+import GLOOP.GLKamera;
+import GLOOP.GLObjekt;
 import GLOOP.GLVektor;
+
+import javax.media.opengl.GL2;
+import javax.media.opengl.glu.GLU;
+import java.lang.reflect.Field;
+
 
 /**
  * Created by peter on 1/24/14.
@@ -11,6 +18,7 @@ public class Vector
     {
         return new Vector(0,0,0);
     }
+
     public static Vector forward()
     {
         return new Vector(0,0,1);
@@ -45,33 +53,63 @@ public class Vector
         return z;
     }
 
-    public void add(Vector v)
+    public Vector add(Vector v)
     {
         this.x += v.x;
         this.y += v.y;
         this.z += v.z;
+        return this;
     }
 
-    public void setX(double x)
+    public Vector addClone(Vector v)
+    {
+        return clone().add(v);
+    }
+
+    public Vector setX(double x)
     {
         this.x = x;
+        return this;
     }
 
-    public void setY(double y)
+    public Vector setXClone(double x)
+    {
+        return clone().setX(x);
+    }
+
+    public Vector setY(double y)
     {
         this.y = y;
+        return this;
     }
 
-    public void setZ(double z)
+    public Vector setYClone(double y)
+    {
+        return clone().setY(y);
+    }
+
+    public Vector setZ(double z)
     {
         this.z = z;
+        return this;
     }
 
-    public void multiply(double mul)
+    public Vector setZClone(double z)
+    {
+        return clone().setZ(z);
+    }
+
+    public Vector multiply(double mul)
     {
         this.x *= mul;
         this.y *= mul;
         this.z *= mul;
+        return this;
+    }
+
+    public Vector multiplyClone(double mul)
+    {
+        return clone().multiply(mul);
     }
 
     public GLVektor toGLVektor()
@@ -140,33 +178,84 @@ public class Vector
         return new double[]{x,y,z};
     }
 
+    public Vector differenceClone(Vector v)
+    {
+        return clone().difference(v);
+    }
+
     public Vector difference(Vector v)
     {
-        return new Vector(v.x - x, v.y - y, v.z - z);
+        x = v.x - x;
+        y = v.y - y;
+        z = v.z - z;
+        return this;
     }
 
-    public Vector multiple(Vector v)
+    public Vector multiplyClone(Vector v)
     {
-        return new Vector(v.x * x, v.y * y, v.z * z);
+        return clone().multiply(v);
     }
 
-    public Vector extractX()
+    public Vector multiply(Vector v)
     {
-        return new Vector(x,0,0);
+        x = v.x * x;
+        y = v.y * y;
+        z = v.z * z;
+        return this;
     }
 
-    public Vector extractY()
-    {
-        return new Vector(0,y,0);
-    }
 
-    public Vector extractZ()
+    public static class Rotation
     {
-        return new Vector(0,0,z);
-    }
+        private static GLObjekt glo = new GLObjekt() {
+            @Override
+            protected void zeichneObjekt(GL2 gl2, GLU glu, GLKamera glKamera) {
 
-    public Vector extractXZ()
-    {
-        return new Vector(x,0,z);
+            }
+        };
+
+        public static Vector getForward(Vector v)
+        {
+            return getForward(v.x,v.y,v.z);
+        }
+
+        public static Vector getForward(double rotX, double rotY, double rotZ)
+        {
+            glo.setzeDrehung(0, 0, 0);
+            glo.drehe(rotX, rotY, rotZ);
+            return new Vector(getRotX(),getRotY(),getRotZ());
+        }
+
+        private static float[] getMatrix()
+        {
+            Class<?> cls = glo.getClass();
+            while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
+            {
+                cls = cls.getSuperclass();
+            }
+            try {
+                Field field = cls.getDeclaredField("zMatrix");
+                field.setAccessible(true);
+                return (float[]) field.get(glo);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public static float getRotX()
+        {
+            return getMatrix()[8];
+        }
+
+        public static float getRotY()
+        {
+            return getMatrix()[9];
+        }
+
+        public static float getRotZ()
+        {
+            return getMatrix()[10];
+        }
     }
 }

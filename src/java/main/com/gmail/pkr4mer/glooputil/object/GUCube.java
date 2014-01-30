@@ -7,7 +7,7 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 /**
  * Created by peter on 1/24/14.
  */
-public class GUCube extends GUObject
+public class GUCube extends Transform
 {
 
     public GUCube(Scene scene, GLQuader g, String t, String n) {

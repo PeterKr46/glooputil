@@ -6,7 +6,7 @@ import com.gmail.pkr4mer.glooputil.Scene;
 /**
  * Created by peter on 1/24/14.
  */
-public class GUEllipsoid extends GUObject
+public class GUEllipsoid extends Transform
 {
 
     public GUEllipsoid(Scene scene, GLKugel sphere, String tag, String name) {
@@ -25,17 +25,17 @@ public class GUEllipsoid extends GUObject
 
     public double getRadX()
     {
-        return defaultScales[0]*0.5*getScaleX();
+        return defaultScale[0]*0.5*getScaleX();
     }
 
     public double getRadY()
     {
-        return defaultScales[1]*0.5*getScaleY();
+        return defaultScale[1]*0.5*getScaleY();
     }
 
     public double getRadZ()
     {
-        return defaultScales[2]*0.5*getScaleZ();
+        return defaultScale[2]*0.5*getScaleZ();
     }
 
     public double getBiggestRadius()

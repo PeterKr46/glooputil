@@ -1,6 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object.collider;
 
-import com.gmail.pkr4mer.glooputil.object.GUObject;
+import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.object.GUPrismoid;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
@@ -12,7 +12,7 @@ public final class GUCylinderCollider extends GUCollider
     private double radius;
     private double height;
 
-    public GUCylinderCollider(GUObject object, double radius, double height)
+    public GUCylinderCollider(Transform object, double radius, double height)
     {
         super(object);
         System.out.println("Radius: " + radius + " Height: " + height);
@@ -20,7 +20,7 @@ public final class GUCylinderCollider extends GUCollider
         setHeight(height);
     }
 
-    public GUCylinderCollider(GUObject object, double radius, double height, Vector offset)
+    public GUCylinderCollider(Transform object, double radius, double height, Vector offset)
     {
         super(object);
         setRadius(radius);

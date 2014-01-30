@@ -1,6 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object.collider;
 
-import com.gmail.pkr4mer.glooputil.object.GUObject;
+import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 
@@ -11,14 +11,14 @@ public final class GUSphereCollider extends GUCollider
 {
     private double radius;
 
-    public GUSphereCollider(GUObject object, double radius)
+    public GUSphereCollider(Transform object, double radius)
     {
         super(object);
         setRadius(radius);
         setCenterOffset(new Vector(0, 0, 0));
     }
 
-    public GUSphereCollider(GUObject object, double radius, Vector offset)
+    public GUSphereCollider(Transform object, double radius, Vector offset)
     {
         super(object);
         setRadius(radius);
