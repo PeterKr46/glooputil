@@ -1,6 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object.collider;
 
-import com.gmail.pkr4mer.glooputil.object.Transform;
+/*import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by peter on 1/28/14.
  */
+/*
 public abstract class GUCollider
 {
     private List<GUCollider> collisions = new ArrayList<>();
@@ -65,7 +66,7 @@ public abstract class GUCollider
 
     public Vector getAbsoluteCenter()
     {
-        Vector v = getGUObject().getPosition();
+        Vector v = getGUObject().getAbsolutePosition();
         v.add(getCenterOffset());
         return v;
     }
@@ -74,7 +75,6 @@ public abstract class GUCollider
 
     protected abstract boolean checkCylinderCollision(GUCylinderCollider other);
 
-    protected abstract boolean checkBoxCollision(GUBoxCollider other);
 
     public final void fixedUpdate()
     {
@@ -137,4 +137,4 @@ public abstract class GUCollider
             getGUObject().getScript(scriptType).onCollisionExit(c);
         }
     }
-}
+}*/

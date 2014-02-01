@@ -3,6 +3,7 @@ package com.gmail.pkr4mer.glooputil.position;
 import GLOOP.GLKamera;
 import GLOOP.GLObjekt;
 import GLOOP.GLVektor;
+import com.gmail.pkr4mer.util.Pair;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
@@ -204,6 +205,15 @@ public class Vector
         return this;
     }
 
+    public Vector toAngles()
+    {
+        double x = Math.toDegrees(Math.atan(this.y/this.z));
+        double y = Math.toDegrees(Math.atan(this.z/this.x));
+        double z = 0;//Math.toDegrees(Math.atan(this.x/this.y));
+        if(this.y/this.z == Double.NaN) x = 0;
+        if(this.z/this.x == Double.NaN) y = 0;
+        return new Vector(x,y,z);
+    }
 
     public static class Rotation
     {
@@ -214,16 +224,42 @@ public class Vector
             }
         };
 
-        public static Vector getForward(Vector v)
+        public static Vector getForward(Vector angles)
         {
-            return getForward(v.x,v.y,v.z);
+            return getForward(angles.x,angles.y,angles.z);
+        }
+
+        /*
+         * @return Pair<Relative Position,Forward Vector>
+         */
+        public static Pair<Vector,Vector> simulateRotateAround(Vector relativePosition, Vector direction, float degress)
+        {
+            glo.setzePosition(0,0,0);
+            glo.rotiere(degress,relativePosition.getX(),relativePosition.getY(),relativePosition.getZ(),direction.getX(),direction.getY(),direction.getZ());
+            return new Pair<>(Vector.fromGLVector(glo.gibPosition()),getForward());
         }
 
         public static Vector getForward(double rotX, double rotY, double rotZ)
         {
             glo.setzeDrehung(0, 0, 0);
             glo.drehe(rotX, rotY, rotZ);
+            debugMatrix();
+            return getForward();
+        }
+
+        private static Vector getForward()
+        {
             return new Vector(getRotX(),getRotY(),getRotZ());
+        }
+
+        private static void debugMatrix()
+        {
+            int i = 0;
+            for( float f : getMatrix() )
+            {
+                System.out.println(i + "=" + f);
+                i++;
+            }
         }
 
         private static float[] getMatrix()
@@ -243,17 +279,17 @@ public class Vector
             return null;
         }
 
-        public static float getRotX()
+        private static float getRotX()
         {
             return getMatrix()[8];
         }
 
-        public static float getRotY()
+        private static float getRotY()
         {
             return getMatrix()[9];
         }
 
-        public static float getRotZ()
+        private static float getRotZ()
         {
             return getMatrix()[10];
         }

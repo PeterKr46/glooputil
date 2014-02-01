@@ -1,5 +1,5 @@
 package com.gmail.pkr4mer.glooputil.object.collider;
-
+/*
 import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.object.GUPrismoid;
 import com.gmail.pkr4mer.glooputil.position.Vector;
@@ -7,7 +7,7 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 /**
  * Created by peter on 1/28/14.
  */
-public final class GUCylinderCollider extends GUCollider
+/*public final class GUCylinderCollider extends GUCollider
 {
     private double radius;
     private double height;
@@ -105,11 +105,6 @@ public final class GUCylinderCollider extends GUCollider
         return false;
     }
 
-    @Override
-    protected boolean checkBoxCollision(GUBoxCollider other) {
-        return false;
-    }
-
     public GUPrismoid getPrismoid()
     {
         return (GUPrismoid) getGUObject();
@@ -146,4 +141,4 @@ public final class GUCylinderCollider extends GUCollider
     public void setRadius(double radius) {
         this.radius = radius;
     }
-}
+}*/

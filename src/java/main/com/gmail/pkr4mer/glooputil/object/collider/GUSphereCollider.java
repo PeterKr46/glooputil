@@ -7,6 +7,7 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 /**
  * Created by peter on 1/28/14.
  */
+/*
 public final class GUSphereCollider extends GUCollider
 {
     private double radius;
@@ -42,11 +43,6 @@ public final class GUSphereCollider extends GUCollider
         return false;
     }
 
-    @Override
-    protected boolean checkBoxCollision(GUBoxCollider other) {
-        return false;
-    }
-
     public void setRadius(double radius)
     {
         this.radius = radius;
@@ -57,3 +53,4 @@ public final class GUSphereCollider extends GUCollider
         return radius;
     }
 }
+*/

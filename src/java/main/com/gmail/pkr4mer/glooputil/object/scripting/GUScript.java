@@ -1,7 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object.scripting;
 
 import com.gmail.pkr4mer.glooputil.object.Transform;
-import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
 
 /**
  * Created by peter on 1/25/14.
@@ -28,7 +27,7 @@ public abstract class GUScript
 
     public abstract RunPriority getRunPriority();
 
-    public void onCollisionStay(GUCollider c)
+    /*public void onCollisionStay(GUCollider c)
     {
 
     }
@@ -41,7 +40,7 @@ public abstract class GUScript
     public void onCollisionExit(GUCollider c)
     {
 
-    }
+    }*/
 
     public static enum RunPriority
     {

@@ -2,7 +2,6 @@ package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.object.*;
-import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
@@ -70,113 +69,6 @@ public class Scene implements ObjectHolder, ScriptHolder
         }.start();
     }
 
-    public GULight createLight(Vector pos)
-    {
-        GLLicht light = new GLLicht(pos.getX(),pos.getY(),pos.getZ());
-        GULight l = new GULight(light,this,null,getAvailableName("light"));
-        objects.put(l.getName(),l);
-        return l;
-    }
-
-    public GUPrismoid createPrismoid(Vector min, Vector max, int verts, float rad2, Axis direction)
-    {
-        double[][] edges = Util.sortiere(min.toDoubleArray(), max.toDoubleArray());
-        double[] edge1 = edges[0];
-        double[] edge2 = edges[1];
-        GLPrismoid prismoid = new GLPrismoid(0,0,0,1,rad2,verts,1);
-        GUPrismoid prism;
-        if( direction == Axis.Y )
-        {
-            prismoid.drehe(270,0,0);
-            double height = edge2[1] - edge1[1];
-            double width = edge2[0] - edge1[0];
-            double depth = edge2[2] - edge1[2];
-            double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prism = new GUPrismoid(this,prismoid,null,getAvailableName("prism"));
-            prism.setPosition(center[0],center[1],center[2]);
-            prism.scale(width*0.5,depth*0.5,height);
-        }
-        else if( direction == Axis.Z )
-        {
-            double height = edge2[1] - edge1[1];
-            double width = edge2[0] - edge1[0];
-            double depth = edge2[2] - edge1[2];
-            double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prism = new GUPrismoid(this,prismoid,null,getAvailableName("prism"));
-            prism.setPosition(center[0],center[1],center[2]);
-            prism.scale(width*0.5,height*0.5,depth);
-        }
-        else
-        {
-            prismoid.drehe(0,90,0);
-            double height = edge2[1] - edge1[1];
-            double width = edge2[0] - edge1[0];
-            double depth = edge2[2] - edge1[2];
-            double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-            prism = new GUPrismoid(this,prismoid,null,getAvailableName("prism"));
-            prism.setPosition(center[0],center[1],center[2]);
-            prism.scale(depth*0.5,height*0.5,width);
-        }
-        objects.put(prism.getName(),prism);
-        return prism;
-    }
-
-    public GUPrismoid createCone(Vector min, Vector max, Axis direction)
-    {
-        return createTruncatedCone(min, max, 0, direction);
-    }
-
-    public GUPrismoid createTruncatedCone(Vector min, Vector max, float rad2, Axis direction)
-    {
-        return createPrismoid(min, max, 100, rad2, direction);
-    }
-
-    public GUPrismoid createCylinder(Vector min, Vector max, Axis direction)
-    {
-        return createPrismoid(min, max, 100, direction);
-    }
-
-    public GUPrismoid createPrismoid(Vector min, Vector max, int verts, Axis direction)
-    {
-        return createPrismoid(min,max,verts,1.0f,direction);
-    }
-
-    public GUCube createCube(Vector min, Vector max)
-    {
-        double[][] edges = Util.sortiere(min.toDoubleArray(), max.toDoubleArray());
-        double[] edge1 = edges[0];
-        double[] edge2 = edges[1];
-        double width = edge2[0] - edge1[0];                        // Calc width
-        double height = edge2[1] - edge1[1];                       // Calc height
-        double depth = edge2[2] - edge1[2];                        // Calc length
-        double[] center = new double[]{edge1[0] + width * 0.5, edge1[1] + height * 0.5, edge1[2] + depth * 0.5};
-        GLQuader cube = new GLQuader(center[0],center[1],center[2], 1, 1, 1);
-        cube.setzeSkalierung(width,height,depth);
-        GUCube cb = new GUCube(this,cube,null,getAvailableName("cube"));
-        objects.put(cb.getName(),cb);
-        return cb;
-    }
-
-    public GUEllipsoid createEllipsoid(Vector min, Vector max)
-    {
-        double[][] edges = Util.sortiere(min.toDoubleArray(), max.toDoubleArray());
-        double[] ecke1 = edges[0];
-        double[] ecke2 = edges[1];
-        double width = ecke2[0] - ecke1[0];
-        double height = ecke2[1] - ecke1[1];
-        double depth = ecke2[2] - ecke1[2];
-        double[] center = new double[]{ecke1[0] + width * 0.5, ecke1[1] + height * 0.5, ecke1[2] + depth * 0.5};
-        double radius = 0.5;
-        GLKugel sphere = new GLKugel(center[0],center[1],center[2],0.5);
-        double skalX = (width * 0.5)/radius;
-        double skalY = (height * 0.5)/radius;
-        double skalZ = (depth * 0.5)/radius;
-        sphere.setzeSkalierung(skalX,skalY,skalZ);
-        GUEllipsoid ellipsoid = new GUEllipsoid(this,sphere,null,getAvailableName("sphere"));
-        objects.put(ellipsoid.getName(),ellipsoid);
-        return ellipsoid;
-    }
-
     public String getAvailableName(String name)
     {
         if(!isNameTaken(name)) return name;
@@ -227,16 +119,6 @@ public class Scene implements ObjectHolder, ScriptHolder
         return guo.setName(name);
     }
 
-    public List<GUCollider> getColliders()
-    {
-        List<GUCollider> gucs = new ArrayList<>();
-        for(Transform guo : objects.values())
-        {
-            if(guo.hasCollider())gucs.add(guo.getCollider());
-        }
-        return gucs;
-    }
-
     public boolean destroy(String name)
     {
         if(!isNameTaken(name)) return false;
@@ -252,7 +134,6 @@ public class Scene implements ObjectHolder, ScriptHolder
         }
     }
 
-    @Override
     public boolean addChild(Transform child)
     {
         return false;
@@ -266,6 +147,26 @@ public class Scene implements ObjectHolder, ScriptHolder
     @Override
     public Transform getParent() {
         return null;
+    }
+
+    @Override
+    public boolean setParent(ObjectHolder parent) {
+        return false;
+    }
+
+    @Override
+    public boolean isParentOf(ObjectHolder other) {
+        return false;
+    }
+
+    @Override
+    public boolean isChildOf(ObjectHolder other) {
+        return false;
+    }
+
+    @Override
+    public List<ObjectHolder> getChildren() {
+        return new ArrayList<ObjectHolder>(objects.values());
     }
 
     @Override

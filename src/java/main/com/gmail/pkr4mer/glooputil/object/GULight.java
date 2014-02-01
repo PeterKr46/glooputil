@@ -1,4 +1,4 @@
-package com.gmail.pkr4mer.glooputil.object;
+/*package com.gmail.pkr4mer.glooputil.object;
 
 import GLOOP.GLLicht;
 import com.gmail.pkr4mer.glooputil.Scene;
@@ -6,6 +6,7 @@ import com.gmail.pkr4mer.glooputil.Scene;
 /**
  * Created by peter on 1/26/14.
  */
+/*
 public class GULight extends Transform
 {
 
@@ -27,4 +28,4 @@ public class GULight extends Transform
     {
         getLight().setzeAbschwaechung(d);
     }
-}
+}*/
