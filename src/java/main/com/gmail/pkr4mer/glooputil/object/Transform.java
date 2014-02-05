@@ -2,6 +2,7 @@ package com.gmail.pkr4mer.glooputil.object;
 
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 import com.gmail.pkr4mer.util.Pair;
@@ -18,13 +19,13 @@ import java.util.Map;
 public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
 {     // This class contains all methods from GLObjekt so that GLObjekt isn't needed anymore. It also si able to interact with other glooputil classes.
 
-    private Vector positition;
+    private Vector position;
     private Vector rotation;
 
-    private Scene scene;
+    protected Scene scene;
 
-    private String tag;
-    private String name;
+    protected String tag;
+    protected String name;
 
     private Transform parent;
     private final List<Transform> children;
@@ -35,9 +36,9 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     protected final CaseInsensitiveMap<GUScript> scripts;
     protected boolean valid = true;
 
-    public Transform(Vector positition, Scene scene, String tag, String name)
+    public Transform(Vector position, Scene scene, String tag, String name) throws Exception
     {
-        this.positition = positition;
+        this.position = position;
         this.rotation = new Vector(0,0,0);
         defaultScale = new double[]{1,1,1};    // Create Default Scale Array
         scale = new double[]{1,1,1};
@@ -46,11 +47,12 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         this.name = name;                               // The Transform's name
         scripts = new CaseInsensitiveMap<>();    // The Scripts of the Transform
         children = new ArrayList<>();
+        registerInScene();
     }
 
     public Transform(Vector positition, Scene scene, Transform parent, String tag, String name)
     {
-        this.positition = positition;
+        this.position = positition;
         this.rotation = new Vector(0,0,0);
         defaultScale = new double[]{1,1,1};    // Create Default Scale Array
         scale = new double[]{1,1,1};
@@ -60,6 +62,17 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         this.name = name;                               // The Transform's name
         scripts = new CaseInsensitiveMap<>();    // The Scripts of the Transform
         children = new ArrayList<>();
+        registerInParent();
+    }
+
+    private void registerInScene() throws Exception
+    {
+        scene.register(this);
+    }
+
+    private boolean registerInParent()
+    {
+        return parent.addChild(this);
     }
 
     public final void setRotation(@NotNull Vector v)
@@ -75,13 +88,13 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
 
     private void fixRotation()
     {
-        while(this.rotation.getX() > 360) this.rotation.setY(this.rotation.getX() - 360);
-        while(this.rotation.getY() > 360) this.rotation.setY(this.rotation.getY() - 360);
-        while(this.rotation.getZ() > 360) this.rotation.setY(this.rotation.getZ() - 360);
+        while(this.rotation.getX() >= 360) this.rotation.setX(this.rotation.getX() - 360);
+        while(this.rotation.getY() >= 360) this.rotation.setY(this.rotation.getY() - 360);
+        while(this.rotation.getZ() >= 360) this.rotation.setZ(this.rotation.getZ() - 360);
 
-        while(this.rotation.getX() < 0) this.rotation.setY(this.rotation.getX() + 360);
+        while(this.rotation.getX() < 0) this.rotation.setX(this.rotation.getX() + 360);
         while(this.rotation.getY() < 0) this.rotation.setY(this.rotation.getY() + 360);
-        while(this.rotation.getZ() < 0) this.rotation.setY(this.rotation.getZ() + 360);
+        while(this.rotation.getZ() < 0) this.rotation.setZ(this.rotation.getZ() + 360);
     }
 
     public final Transform getParent()
@@ -91,6 +104,13 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
 
     public final boolean setParent(ObjectHolder t)
     {
+        if( parent != null && t == null)
+        {
+            ObjectHolder p = parent;
+            parent = null;
+            p.removeChild(this);
+            return true;
+        }
         if(!(t instanceof Transform) || this.isParentOf(t)) return false;
         parent = (Transform) t;
         return true;
@@ -99,6 +119,14 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     public final List<ObjectHolder> getChildren()
     {
         return new ArrayList<ObjectHolder>(children);
+    }
+
+    @Override
+    public boolean removeChild(ObjectHolder child)
+    {
+        children.remove(child);
+        child.setParent(null);
+        return true;
     }
 
     public final boolean isParentOf(ObjectHolder t)
@@ -163,7 +191,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
 
     public final Vector getAbsolutePosition()
     {
-        return positition;
+        return position;
     }
 
     /*
@@ -190,24 +218,24 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     // Sets the Transform's position to the given vector
     public final void setPosition(Vector pPosition)
     {
-        positition = pPosition;
+        position = pPosition;
     }
 
     public final void setRelativePosition(Vector relativePosition)
     {
-        positition = getParentPosition().add(relativePosition);
+        position = getParentPosition().add(relativePosition);
     }
 
     public final double getX(){   // Returns the Transform's x-position
-        return positition.getX();
+        return position.getX();
     }
 
     public final double getY(){   // Returns the Transform's y-position
-        return positition.getY();
+        return position.getY();
     }
 
     public final double getZ(){   // Returns the Transform's z-position
-        return positition.getZ();
+        return position.getZ();
     }
 
     public final boolean destroy(){   // Deletes the Transform
@@ -242,7 +270,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
 
     public final void move(Vector pVec)
     {  // Moves the Transform along the vector pVec
-        positition.add(pVec);
+        position.add(pVec);
     }
 
     public final void runScripts()   // Activates the scripts
@@ -329,18 +357,52 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     }
 
     @Override
+    public void rotate(double x, double y, double z)
+    {
+        rotate(new Vector(x,y,z));
+    }
+
+    @Override
     public void rotate(Vector degr)
     {
         rotation.add(degr);
+        Vector hinge = getAbsolutePosition();
+        for(Transform t : children)
+        {
+            //System.out.println(t.getName() + "@" + t.getAbsolutePosition());
+            //System.out.println(getName() + "@" + getAbsolutePosition());
+            //System.out.println("Hinge -> " + hinge.differenceClone(t.getAbsolutePosition()));
+            t.rotateAround(hinge, Axis.X.toVector(),-(float)degr.getX());
+            t.rotateAround(hinge, Axis.Y.toVector(),-(float)degr.getY());
+            t.rotateAround(hinge, Axis.Z.toVector(),-(float)degr.getZ());
+        }
         fixRotation();
+    }
+
+    @Override
+    public void rotateAround(double x1, double y1, double z1, double x2, double y2, double z2, float degrees)
+    {
+        rotateAround(new Vector(x1,y1,z1),new Vector(x2,y2,z2),degrees);
     }
 
     @Override
     public void rotateAround(Vector position, Vector direction, float degrees)
     {
-        Pair<Vector,Vector> result = Vector.Rotation.simulateRotateAround(getAbsolutePosition().differenceClone(position), direction, degrees);
+        Pair<Vector,Vector> result =
+                Vector.Rotation.simulateRotateAround(
+                        getRotation(),
+                        getAbsolutePosition(),
+                        position,
+                        direction,
+                        degrees
+                );
         setPosition(result.getA());
-        setRotation(result.getB().toAngles());
+        setRotation(result.getB());
+        fixRotation();
+        for( Transform child : children )
+        {
+            child.rotateAround(position,direction,degrees);
+        }
     }
 
     @Override
@@ -348,4 +410,16 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     {
         return !(child == null || (!(child instanceof Transform)) || child.equals(getParent())) && children.add((Transform) child);
     }
+
+    public final void fixedUpdate()
+    {
+        updateBackend();
+        runScripts();
+        for(Transform t : children)
+        {
+            t.fixedUpdate();
+        }
+    }
+
+    protected abstract void updateBackend();
 }

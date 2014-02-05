@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by peter on 1/24/14.
  */
-public class Scene implements ObjectHolder, ScriptHolder
+public class Scene implements ObjectHolder
 {
     private CaseInsensitiveMap<Transform> objects;
     private boolean running;
@@ -24,12 +24,25 @@ public class Scene implements ObjectHolder, ScriptHolder
     {
         objects = new CaseInsensitiveMap<>();
         running = true;
-        keyboard = new GLTastatur();
         try {
             mainThread();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean stop()
+    {
+        if(!running) return false;
+        running = false;
+        return true;
+    }
+
+    public boolean registerKeyboard()
+    {
+        if(keyboard != null) return false;
+        keyboard = new GLTastatur();
+        return true;
     }
 
     public Transform findObject(String name)
@@ -49,16 +62,15 @@ public class Scene implements ObjectHolder, ScriptHolder
         {
             public void run()
             {
-                while(true)
+                while(running)
                 {
                     try {
                         Thread.sleep(50L);
                         synchronized (threadO)
                         {
-                            runScripts();
                             for( Transform o : new ArrayList<>(objects.values()) )
                             {
-                                o.runScripts();
+                                o.fixedUpdate();
                             }
                         }
                     } catch (Exception e) {
@@ -134,63 +146,51 @@ public class Scene implements ObjectHolder, ScriptHolder
         }
     }
 
-    public boolean addChild(Transform child)
+    @Override
+    public boolean addChild(ObjectHolder child)
+    {
+        throw new UnsupportedOperationException("A Scene Object's Children cannot be directly manipulated.");
+    }
+
+    @Override
+    public Transform getParent()
+    {
+        throw new UnsupportedOperationException("A Scene Object is always the root Object.");
+    }
+
+    @Override
+    public boolean setParent(ObjectHolder parent)
+    {
+        throw new UnsupportedOperationException("A Scene Object is always the root Object.");
+    }
+
+    @Override
+    public boolean isParentOf(ObjectHolder other)
+    {
+        return other.isChildOf(this);
+    }
+
+    @Override
+    public boolean isChildOf(ObjectHolder other)
     {
         return false;
     }
 
     @Override
-    public boolean addChild(ObjectHolder child) {
-        return false;
-    }
-
-    @Override
-    public Transform getParent() {
-        return null;
-    }
-
-    @Override
-    public boolean setParent(ObjectHolder parent) {
-        return false;
-    }
-
-    @Override
-    public boolean isParentOf(ObjectHolder other) {
-        return false;
-    }
-
-    @Override
-    public boolean isChildOf(ObjectHolder other) {
-        return false;
-    }
-
-    @Override
-    public List<ObjectHolder> getChildren() {
+    public List<ObjectHolder> getChildren()
+    {
         return new ArrayList<ObjectHolder>(objects.values());
     }
 
     @Override
-    public void runScripts() {
-
+    public boolean removeChild(ObjectHolder child)
+    {
+        throw new UnsupportedOperationException("A Scene Object's Children cannot be directly manipulated.");
     }
 
-    @Override
-    public GUScript getScript(String id) {
-        return null;
-    }
-
-    @Override
-    public boolean addScript(GUScript script) {
-        return false;
-    }
-
-    @Override
-    public boolean removeScript(GUScript script) {
-        return false;
-    }
-
-    @Override
-    public List<String> getScripts() {
-        return null;
+    public void register(Transform transform) throws Exception
+    {
+        if(this.isNameTaken(transform.getName())) throw new Exception("Name '" + transform.getName() + "' already taken.");
+        objects.put(transform.getName(),transform);
     }
 }

@@ -2,11 +2,13 @@ package com.gmail.pkr4mer.glooputil.object.scripting;
 
 import com.gmail.pkr4mer.glooputil.object.Transform;
 
+
 /**
  * Created by peter on 1/25/14.
  */
 public abstract class GUScript
 {
+
     private Transform guObject;
 
     public GUScript() {}
@@ -23,7 +25,10 @@ public abstract class GUScript
         return guObject;
     }
 
-    public abstract String getTypeName();
+    public String getTypeName()
+    {
+        return "DefaultName";
+    }
 
     public abstract RunPriority getRunPriority();
 

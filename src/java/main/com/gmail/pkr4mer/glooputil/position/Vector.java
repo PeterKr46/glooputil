@@ -164,14 +164,13 @@ public class Vector
 
     public static double getAngle(Vector a, Vector b)
     {
-        // a * b
-        double top = (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
-        // |a|
-        double sumA = a.magnitude();
-        // |b|
-        double sumB = b.magnitude();
-        double total = top / (sumA * sumB);
-        return Math.acos(Math.toRadians(total))*180/Math.PI;
+        // →a * →b
+        double top = a.multiplyClone(b).magnitude();
+        // |a| * |b|
+        double bottom = a.magnitude() * b.magnitude();
+        if(bottom == 0.0) return 0;
+        double total = top / bottom;
+        return Math.toDegrees(Math.acos(total));
     }
 
     public double[] toDoubleArray()
@@ -207,11 +206,14 @@ public class Vector
 
     public Vector toAngles()
     {
-        double x = Math.toDegrees(Math.atan(this.y/this.z));
+        /*double x = -Math.toDegrees(Math.atan(this.y/this.z));
         double y = Math.toDegrees(Math.atan(this.z/this.x));
         double z = 0;//Math.toDegrees(Math.atan(this.x/this.y));
         if(this.y/this.z == Double.NaN) x = 0;
-        if(this.z/this.x == Double.NaN) y = 0;
+        if(this.z/this.x == Double.NaN) y = 0;*/
+        double z = new Vector(this.x,this.y,0).getAngle(new Vector(0,1,0));
+        double y = new Vector(this.x,0,this.z).getAngle(new Vector(1,0,0));
+        double x = new Vector(0,this.y,this.z).getAngle(new Vector(0,0,1));
         return new Vector(x,y,z);
     }
 
@@ -230,20 +232,23 @@ public class Vector
         }
 
         /*
-         * @return Pair<Relative Position,Forward Vector>
+         * @return Pair<Position,Rotation>
          */
-        public static Pair<Vector,Vector> simulateRotateAround(Vector relativePosition, Vector direction, float degress)
+        public static Pair<Vector,Vector> simulateRotateAround(Vector prevRotation, Vector prevPosition, Vector hinge, Vector direction, float degrees)
         {
-            glo.setzePosition(0,0,0);
-            glo.rotiere(degress,relativePosition.getX(),relativePosition.getY(),relativePosition.getZ(),direction.getX(),direction.getY(),direction.getZ());
-            return new Pair<>(Vector.fromGLVector(glo.gibPosition()),getForward());
+            //System.out.println(hinge + "<- Hinge Point");
+            glo.setzePosition(prevPosition.toGLVektor());
+            glo.setzeDrehung(prevRotation.getX(),prevRotation.getY(),prevRotation.getZ());
+            //glo.rotiere(degrees,hinge.getX(),hinge.getY(),hinge.getZ(),direction.getX(),direction.getY(),direction.getZ());
+            glo.rotiere(degrees,direction.toGLVektor(),hinge.toGLVektor());
+            return new Pair<>(Vector.fromGLVector(glo.gibPosition()),getForward().toAngles());
         }
 
         public static Vector getForward(double rotX, double rotY, double rotZ)
         {
             glo.setzeDrehung(0, 0, 0);
             glo.drehe(rotX, rotY, rotZ);
-            debugMatrix();
+            //debugMatrix();
             return getForward();
         }
 

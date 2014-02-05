@@ -19,4 +19,6 @@ public interface ObjectHolder
 
     public List<ObjectHolder> getChildren();
 
+    public boolean removeChild(ObjectHolder child);
+
 }

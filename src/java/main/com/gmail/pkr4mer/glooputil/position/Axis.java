@@ -5,5 +5,16 @@ package com.gmail.pkr4mer.glooputil.position;
  */
 public enum Axis
 {
-    X,Y,Z
+    X,Y,Z;
+
+    public Vector toVector()
+    {
+        switch(this)
+        {
+            case X: return new Vector(1,0,0);
+            case Y: return new Vector(0,1,0);
+            case Z: return new Vector(0,0,1);
+            default: return new Vector(1,0,0);
+        }
+    }
 }
