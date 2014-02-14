@@ -1,13 +1,12 @@
 package com.gmail.pkr4mer.glooputil.object.collider;
-/*
+
 import com.gmail.pkr4mer.glooputil.object.Transform;
-import com.gmail.pkr4mer.glooputil.object.GUPrismoid;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 1/28/14.
  */
-/*public final class GUCylinderCollider extends GUCollider
+public final class GUCylinderCollider extends GUCollider
 {
     private double radius;
     private double height;
@@ -105,11 +104,6 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
         return false;
     }
 
-    public GUPrismoid getPrismoid()
-    {
-        return (GUPrismoid) getGUObject();
-    }
-
     public Vector getUpperCenter()
     {
         Vector u = getAbsoluteCenter();
@@ -141,4 +135,4 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
     public void setRadius(double radius) {
         this.radius = radius;
     }
-}*/
+}

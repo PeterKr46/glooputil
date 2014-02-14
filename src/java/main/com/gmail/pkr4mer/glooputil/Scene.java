@@ -2,9 +2,7 @@ package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.object.*;
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
-import com.gmail.pkr4mer.glooputil.position.Axis;
-import com.gmail.pkr4mer.glooputil.position.Vector;
+import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
 import java.lang.reflect.Field;
@@ -192,5 +190,15 @@ public class Scene implements ObjectHolder
     {
         if(this.isNameTaken(transform.getName())) throw new Exception("Name '" + transform.getName() + "' already taken.");
         objects.put(transform.getName(),transform);
+    }
+
+    public List<GUCollider> getColliders()
+    {
+        List<GUCollider> result = new ArrayList<>();
+        for(Transform t : objects.values() )
+        {
+            result.addAll(t.getAllColliders());
+        }
+        return result;
     }
 }

@@ -118,6 +118,24 @@ public class Vector
         return new GLVektor(x,y,z);
     }
 
+    public Vector normalize()
+    {
+        setMagnitude(1);
+        return this;
+    }
+
+    public Vector normalizeClone()
+    {
+        return clone().normalize();
+    }
+
+    public Vector flatten()
+    {
+        y = 0;
+        return this;
+    }
+
+    @Override
     public Vector clone()
     {
         return new Vector(x,y,z);
@@ -126,6 +144,15 @@ public class Vector
     public double magnitude()
     {
         return Math.sqrt(x*x + y*y + z*z);
+    }
+
+    public Vector setMagnitude(double magnitude)
+    {
+        double currerntMag = magnitude();
+        x *= magnitude/currerntMag;
+        z *= magnitude/currerntMag;
+        y *= magnitude/currerntMag;
+        return this;
     }
 
     public String toString()
@@ -204,6 +231,14 @@ public class Vector
         return this;
     }
 
+    public Vector round()
+    {
+        x = Math.floor(x);
+        y = Math.floor(y);
+        z = Math.floor(z);
+        return this;
+    }
+
     public Vector toAngles()
     {
         /*double x = -Math.toDegrees(Math.atan(this.y/this.z));
@@ -213,7 +248,7 @@ public class Vector
         if(this.z/this.x == Double.NaN) y = 0;*/
         double z = new Vector(this.x,this.y,0).getAngle(new Vector(0,1,0));
         double y = new Vector(this.x,0,this.z).getAngle(new Vector(1,0,0));
-        double x = new Vector(0,this.y,this.z).getAngle(new Vector(0,0,1));
+        double x = new Vector(0,this.y,this.z).getAngle(new Vector(0,0,1));//TODO Pythagoras
         return new Vector(x,y,z);
     }
 
@@ -257,17 +292,17 @@ public class Vector
             return new Vector(getRotX(),getRotY(),getRotZ());
         }
 
-        private static void debugMatrix()
+        public static void debugMatrix(GLObjekt glo)
         {
             int i = 0;
-            for( float f : getMatrix() )
+            for( float f : getMatrix(glo) )
             {
                 System.out.println(i + "=" + f);
                 i++;
             }
         }
 
-        private static float[] getMatrix()
+        public static float[] getMatrix(GLObjekt glo)
         {
             Class<?> cls = glo.getClass();
             while( !cls.getName().equalsIgnoreCase("gloop.globjekt") )
@@ -286,17 +321,34 @@ public class Vector
 
         private static float getRotX()
         {
-            return getMatrix()[8];
+            return getMatrix(glo)[8];
         }
 
         private static float getRotY()
         {
-            return getMatrix()[9];
+            return getMatrix(glo)[9];
         }
 
         private static float getRotZ()
         {
-            return getMatrix()[10];
+            return getMatrix(glo)[10];
+        }
+
+        public static Vector getRotation(GLObjekt glo)
+        {
+            float[] matrix = getMatrix(glo);
+            debugMatrix(glo);
+            for(int i = 0; i < matrix.length; i++ )
+            {
+                for( int j = i; j < matrix.length; j++ )
+                {
+                    for( int k = i; k < matrix.length; k++ )
+                    {
+                        System.out.println(new Vector(matrix[i],matrix[j],matrix[k]).toAngles().round() + " | " + new Vector(i,j,k));
+                    }
+                }
+            }
+            return new Vector(matrix[8],matrix[9],matrix[10]);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.gmail.pkr4mer.glooputil.object.scripting;
 
 import com.gmail.pkr4mer.glooputil.object.Transform;
+import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
 
 
 /**
@@ -8,21 +9,35 @@ import com.gmail.pkr4mer.glooputil.object.Transform;
  */
 public abstract class GUScript
 {
+    private boolean started = false;
+    private Transform transform;
 
-    private Transform guObject;
-
-    public GUScript() {}
-
-    public final void setGUObject(Transform o)
+    public GUScript()
     {
-        this.guObject = o;
+    }
+
+    public final void setTransform(Transform o)
+    {
+        this.transform = o;
+    }
+
+    public final void onUpdate()
+    {
+        if(!started) onStart();
+        started = true;
+        fixedUpdate();
     }
 
     public abstract void fixedUpdate();
 
-    public final Transform getGUObject()
+    public void onStart()
     {
-        return guObject;
+
+    }
+
+    public final Transform getTransform()
+    {
+        return transform;
     }
 
     public String getTypeName()
@@ -32,7 +47,7 @@ public abstract class GUScript
 
     public abstract RunPriority getRunPriority();
 
-    /*public void onCollisionStay(GUCollider c)
+    public void onCollisionStay(GUCollider c)
     {
 
     }
@@ -45,7 +60,7 @@ public abstract class GUScript
     public void onCollisionExit(GUCollider c)
     {
 
-    }*/
+    }
 
     public static enum RunPriority
     {

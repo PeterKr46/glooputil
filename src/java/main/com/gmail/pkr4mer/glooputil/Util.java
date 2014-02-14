@@ -9,7 +9,7 @@ package com.gmail.pkr4mer.glooputil;
 
 public abstract class Util
 {
-	public static double[][] sortiere(double[] ecke1, double[] ecke2)
+	public static double[][] sort(double[] ecke1, double[] ecke2)
 	{
 		for(int i = 0; i < ecke1.length && i < ecke2.length; i++)	// Für alle Indexe, die beide Arrays haben
 		{

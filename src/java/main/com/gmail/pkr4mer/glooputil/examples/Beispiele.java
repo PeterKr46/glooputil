@@ -1,61 +1,70 @@
 package com.gmail.pkr4mer.glooputil.examples;
 
-import GLOOP.GLLicht;
-import GLOOP.GLSchwenkkamera;
-import GLOOP.GLVektor;
-import GLOOP.GLWuerfel;
+import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.Scene;
-import com.gmail.pkr4mer.glooputil.object.Cube;
-import com.gmail.pkr4mer.glooputil.object.Sphere;
+import com.gmail.pkr4mer.glooputil.object.renderable.*;
+import com.gmail.pkr4mer.glooputil.object.scripting.BasicControls;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
-import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
+
+import java.io.File;
 
 public class Beispiele
 {
+    private static Sphere balloon;
     public static void main(String[] args)
     {
-        System.out.println(new Vector(0,1,0).getAngle(new Vector(1,0,1)));
-        System.out.println(new Vector(7,20,56).toAngles());
         Scene scene = new Scene();
-        final GLWuerfel testObj = new GLWuerfel(new GLVektor(20,20,0),5);
-        new GLLicht();
+        new GLLicht(300,300,300).setzeHintergrundlicht(0,0,0);
         try {
-            Cube a = new Cube(new Vector(-20,-20,0),10,scene,null,"sphere");
-            a.addScript(
-                    new GUScript() {
-                        @Override
-                        public void fixedUpdate() {
-                            //getGUObject().rotateAround(getGUObject().getAbsolutePosition(),new Vector(1,0,0),1);
-                            //getGUObject().move(getGUObject().getForward());
-                            getGUObject().rotateAround(new Vector(0,0,0), new Vector(1,10,5),10);
-                            testObj.rotiere(10,new GLVektor(1,10,5),new GLVektor(0,0,0));
-                            if(Math.random() > 0.95) System.out.println(getGUObject().getRotation());
-                        }
-
-                        @Override
-                        public RunPriority getRunPriority() {
-                            return RunPriority.HIGHEST;
-                        }
-                    }
-            );
-            /*new Cube(new Vector(20,20,0),5,scene,a,null,"sphere2").addScript(
-                    new GUScript() {
-                        @Override
-                        public void fixedUpdate() {
-                            //System.out.println("Position> " + getGUObject().getAbsolutePosition());
-                            //System.out.println("Rotation> " + getGUObject().getRotation());
-                        }
-
-                        @Override
-                        public RunPriority getRunPriority() {
-                            return RunPriority.LOW;
-                        }
-                    }
-            );*/
+            balloon = new Sphere(new Vector(0,100,0),50,scene,null,"Balloon");
+            balloon.setColor(1,0,0);
+            new Cube(new Vector(-15,0,-15),new Vector(13,15,-13),scene,balloon,null,"Wall1").setColor(0.5,0.4,0.2);
+            new Cube(new Vector(-15,0,-13),new Vector(-13,15,15),scene,balloon,null,"Wall2").setColor(0.5,0.4,0.2);
+            new Cube(new Vector(15,0,15),new Vector(-13,15,13),scene,balloon,null,"Wall3").setColor(0.5,0.4,0.2);
+            new Cube(new Vector(15,0,13),new Vector(13,15,-15),scene,balloon,null,"Wall4").setColor(0.5,0.4,0.2);
+            new Cube(new Vector(-15,-1,-15),new Vector(15,0,15),scene,balloon,null,"Floor").setColor(0.4,0.3,0.2);
+            new Cylinder(new Vector(-14,14+25,-14),1,50,scene,balloon,null,"Rope1").rotate(90, 0, 0);
+            new Cylinder(new Vector(-14,14+25,14),1,50,scene,balloon,null,"Rope2").rotate(90, 0, 0);
+            new Cylinder(new Vector(14,14+25,-14),1,50,scene,balloon,null,"Rope3").rotate(90, 0, 0);
+            new Cylinder(new Vector(14,14+25,14),1,50,scene,balloon,null,"Rope4").rotate(90,0,0);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new GLSchwenkkamera().zeigeAchsen(true);
+        balloon.move(0,100,0);
+        /*try {
+            new Camera(500,500,balloon.getAbsolutePosition().add(new Vector(100, 30, 0)),scene,null,"Camera");//.setParent(balloon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        GLKamera k = new GLSchwenkkamera();
+        //k.setzePosition(0,300,0);
+        //k.setzeScheitelrichtung(0,0,0);
+        new GLTerrain(0,0,0,new File("").getAbsolutePath() + "/resources/textures/lava.png");
+        balloon.addScript(
+                new GUScript() {
+                    private double i = 0;
+                    private double timeScale = 0.1;
+                    private double baseY;
+                    private double magnitude = 5;
+
+                    public void onStart() {
+                        baseY = getTransform().getY();
+                    }
+
+                    @Override
+                    public void fixedUpdate() {
+                        i += timeScale;
+                        double y = Math.sin(i) * magnitude;
+                        getTransform().setPosition(getTransform().getAbsolutePosition().setY(baseY + y));
+                    }
+
+                    @Override
+                    public RunPriority getRunPriority() {
+                        return RunPriority.LOW;
+                    }
+                }
+        );
+        balloon.addScript(new BasicControls());
     }
 }
