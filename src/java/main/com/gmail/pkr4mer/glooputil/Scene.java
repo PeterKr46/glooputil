@@ -2,7 +2,9 @@ package com.gmail.pkr4mer.glooputil;
 
 import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.object.*;
-import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
+import com.gmail.pkr4mer.glooputil.object.collider.Collider;
+import com.gmail.pkr4mer.glooputil.object.renderable.Camera;
+import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
 import java.lang.reflect.Field;
@@ -17,16 +19,23 @@ public class Scene implements ObjectHolder
     private CaseInsensitiveMap<Transform> objects;
     private boolean running;
     private GLTastatur keyboard;
+    private Camera camera;
 
     public Scene()
     {
         objects = new CaseInsensitiveMap<>();
         running = true;
         try {
+            camera = new Camera(560,560, new Vector(0,500,0),this,"MainCamera","MainCamera");
             mainThread();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Camera getCamera()
+    {
+        return camera;
     }
 
     public boolean stop()
@@ -192,9 +201,9 @@ public class Scene implements ObjectHolder
         objects.put(transform.getName(),transform);
     }
 
-    public List<GUCollider> getColliders()
+    public List<Collider> getColliders()
     {
-        List<GUCollider> result = new ArrayList<>();
+        List<Collider> result = new ArrayList<>();
         for(Transform t : objects.values() )
         {
             result.addAll(t.getAllColliders());

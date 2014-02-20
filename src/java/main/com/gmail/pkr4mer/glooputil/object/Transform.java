@@ -1,7 +1,7 @@
 package com.gmail.pkr4mer.glooputil.object;
 
 import com.gmail.pkr4mer.glooputil.Scene;
-import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
+import com.gmail.pkr4mer.glooputil.object.collider.Collider;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
@@ -32,7 +32,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
 
     protected final CaseInsensitiveMap<GUScript> scripts;
     protected boolean valid = true;
-    protected GUCollider collider;
+    protected Collider collider;
 
     public Transform(Vector position, Scene scene, String tag, String name) throws Exception
     {
@@ -103,9 +103,9 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         return new ArrayList<ObjectHolder>(children);
     }
 
-    public final List<GUCollider> getAllColliders()
+    public final List<Collider> getAllColliders()
     {
-        ArrayList<GUCollider> colls = new ArrayList<>();
+        ArrayList<Collider> colls = new ArrayList<>();
         for( Transform child : children )
         {
             colls.addAll(child.getAllColliders());
@@ -114,7 +114,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         return colls;
     }
 
-    public GUCollider getCollider()
+    public Collider getCollider()
     {
         return collider;
     }
@@ -123,6 +123,8 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     {
         return collider != null;
     }
+
+    public abstract void createCollider();
 
     @Override
     public boolean removeChild(ObjectHolder child)
@@ -411,6 +413,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     public final void fixedUpdate()
     {
         updateBackend();
+        if(collider != null) collider.fixedUpdate();
         runScripts();
         for(Transform t : children)
         {

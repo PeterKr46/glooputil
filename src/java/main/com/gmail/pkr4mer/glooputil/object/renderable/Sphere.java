@@ -4,6 +4,7 @@ import GLOOP.GLKugel;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.ObjectHolder;
 import com.gmail.pkr4mer.glooputil.object.Transform;
+import com.gmail.pkr4mer.glooputil.object.collider.SphereCollider;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
@@ -20,6 +21,9 @@ public class Sphere extends VisibleTransform
             this.name = scene.getAvailableName("sphere");
         }
         backend = new GLKugel(position.toGLVektor(),radius);
+        defaultScale[0] = radius;
+        defaultScale[1] = radius;
+        defaultScale[2] = radius;
     }
 
     public Sphere(Vector position, double radius, Scene scene, Transform parent, String tag, String name) throws Exception
@@ -70,5 +74,21 @@ public class Sphere extends VisibleTransform
     protected void updateBackend()
     {
         backend.setzePosition(getAbsolutePosition().toGLVektor());
+    }
+
+    public double getBiggestRadius()
+    {
+        double biggest = 0;
+        if(getDefaultScaleX() > biggest) biggest = getDefaultScaleX();
+        if(getDefaultScaleY() > biggest) biggest = getDefaultScaleY();
+        if(getDefaultScaleZ() > biggest) biggest = getDefaultScaleZ();
+        return biggest;
+    }
+
+    @Override
+    public void createCollider()
+    {
+        collider = new SphereCollider(this,getBiggestRadius());
+        System.out.println(((SphereCollider)collider).getRadius());
     }
 }

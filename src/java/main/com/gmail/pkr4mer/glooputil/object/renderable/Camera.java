@@ -18,11 +18,17 @@ public class Camera extends Transform {
     public Camera(int width,int height,Vector position, Scene scene, String tag, String name) throws Exception
     {
         super(position, scene, tag, name);
-        backend = new GLSchwenkkamera(width,height);
+        backend = new GLKamera(width,height);
+        backend.setzePosition(position.toGLVektor());
     }
 
     @Override
-    public void rotate(Vector degr) { }
+    public void createCollider() {
+
+    }
+
+    @Override
+    public void rotate(Vector degr) {}
 
     @Override
     public void rotateAround(double x1, double y1, double z1, double x2, double y2, double z2, float degrees) { }
@@ -40,10 +46,11 @@ public class Camera extends Transform {
     protected void updateBackend()
     {
         if(backend == null) return;
-        backend.setzePosition(
-                getAbsolutePosition().
-                        toGLVektor()
-        );
+        Vector pos = getAbsolutePosition();
+        if(pos.getZ() == 0) pos.setZ(0.00001);
+        else if(pos.getX() == 0) pos.setX(0.00001);
+        backend.setzePosition(pos.toGLVektor());
         backend.setzeBlickpunkt(targetPosition.toGLVektor());
+        backend.setzeScheitelrichtung(0,1,0);
     }
 }

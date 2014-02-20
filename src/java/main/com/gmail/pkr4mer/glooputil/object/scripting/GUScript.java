@@ -1,7 +1,7 @@
 package com.gmail.pkr4mer.glooputil.object.scripting;
 
 import com.gmail.pkr4mer.glooputil.object.Transform;
-import com.gmail.pkr4mer.glooputil.object.collider.GUCollider;
+import com.gmail.pkr4mer.glooputil.object.collider.Collider;
 
 
 /**
@@ -42,22 +42,22 @@ public abstract class GUScript
 
     public String getTypeName()
     {
-        return "DefaultName";
+        return this.getClass().getName();
     }
 
     public abstract RunPriority getRunPriority();
 
-    public void onCollisionStay(GUCollider c)
+    public void onCollisionStay(Collider c)
     {
 
     }
 
-    public void onCollisionEnter(GUCollider c)
+    public void onCollisionEnter(Collider c)
     {
 
     }
 
-    public void onCollisionExit(GUCollider c)
+    public void onCollisionExit(Collider c)
     {
 
     }

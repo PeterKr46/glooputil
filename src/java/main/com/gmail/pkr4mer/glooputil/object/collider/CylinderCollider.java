@@ -6,12 +6,12 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 /**
  * Created by peter on 1/28/14.
  */
-public final class GUCylinderCollider extends GUCollider
+public final class CylinderCollider extends Collider
 {
     private double radius;
     private double height;
 
-    public GUCylinderCollider(Transform object, double radius, double height)
+    public CylinderCollider(Transform object, double radius, double height)
     {
         super(object);
         System.out.println("Radius: " + radius + " Height: " + height);
@@ -19,7 +19,7 @@ public final class GUCylinderCollider extends GUCollider
         setHeight(height);
     }
 
-    public GUCylinderCollider(Transform object, double radius, double height, Vector offset)
+    public CylinderCollider(Transform object, double radius, double height, Vector offset)
     {
         super(object);
         setRadius(radius);
@@ -40,7 +40,7 @@ public final class GUCylinderCollider extends GUCollider
     }
 
     @Override
-    protected boolean checkSphereCollision(GUSphereCollider other)
+    protected boolean checkSphereCollision(SphereCollider other)
     {
         if(other.getAbsoluteCenter().getY() > getAbsoluteCenter().getY() + height)
         {
@@ -79,7 +79,7 @@ public final class GUCylinderCollider extends GUCollider
     }
 
     @Override
-    protected boolean checkCylinderCollision(GUCylinderCollider other)
+    protected boolean checkCylinderCollision(CylinderCollider other)
     {
         if(
                 other.getLowerCenter().getY() <= getUpperCenter().getY() &&

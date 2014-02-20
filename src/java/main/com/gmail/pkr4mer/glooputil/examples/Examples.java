@@ -3,13 +3,12 @@ package com.gmail.pkr4mer.glooputil.examples;
 import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.renderable.*;
-import com.gmail.pkr4mer.glooputil.object.scripting.BasicControls;
 import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 import java.io.File;
 
-public class Beispiele
+public class Examples
 {
     private static Sphere balloon;
     public static void main(String[] args)
@@ -28,18 +27,24 @@ public class Beispiele
             new Cylinder(new Vector(-14,14+25,14),1,50,scene,balloon,null,"Rope2").rotate(90, 0, 0);
             new Cylinder(new Vector(14,14+25,-14),1,50,scene,balloon,null,"Rope3").rotate(90, 0, 0);
             new Cylinder(new Vector(14,14+25,14),1,50,scene,balloon,null,"Rope4").rotate(90,0,0);
+
+            for(int i = 0; i < 30; i++)
+            {
+                Sphere s = new Sphere(new Vector(Math.random()*512-256,60,Math.random()*512-256),8,scene,null,null);
+                s.addScript(new EvadeScript(balloon, 30, 200));
+                s.addScript(new BoundaryScript(-256,256,-256,256));
+                s.addScript(new PreventCollisionScript());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        scene.getCamera().setPosition(0, 800, 500);
         balloon.move(0,100,0);
         /*try {
             new Camera(500,500,balloon.getAbsolutePosition().add(new Vector(100, 30, 0)),scene,null,"Camera");//.setParent(balloon);
         } catch (Exception e) {
             e.printStackTrace();
         }*/
-        GLKamera k = new GLSchwenkkamera();
-        //k.setzePosition(0,300,0);
-        //k.setzeScheitelrichtung(0,0,0);
         new GLTerrain(0,0,0,new File("").getAbsolutePath() + "/resources/textures/lava.png");
         balloon.addScript(
                 new GUScript() {

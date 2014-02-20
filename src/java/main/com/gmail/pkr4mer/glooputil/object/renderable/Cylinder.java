@@ -4,6 +4,7 @@ import GLOOP.GLPrismoid;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.ObjectHolder;
 import com.gmail.pkr4mer.glooputil.object.Transform;
+import com.gmail.pkr4mer.glooputil.object.collider.CylinderCollider;
 import com.gmail.pkr4mer.glooputil.position.Axis;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
@@ -99,5 +100,10 @@ public class Cylinder extends VisibleTransform
     protected void updateBackend()
     {
         backend.setzePosition(getAbsolutePosition().toGLVektor());
+    }
+
+    @Override
+    public void createCollider() {
+        collider = new CylinderCollider(this,getScaleX(),getScaleY());
     }
 }

@@ -10,14 +10,14 @@ import java.util.List;
  * Created by peter on 1/28/14.
  */
 
-public abstract class GUCollider
+public abstract class Collider
 {
-    private List<GUCollider> collisions = new ArrayList<>();
+    private List<Collider> collisions = new ArrayList<>();
     private Transform guo;
     private boolean valid = true;
     private Vector centerOffset;
 
-    public GUCollider(Transform guo)
+    public Collider(Transform guo)
     {
         this.guo = guo;
         this.centerOffset = new Vector(0,0,0);
@@ -30,16 +30,16 @@ public abstract class GUCollider
 
     public abstract boolean contains(Vector v);
 
-    public final boolean collidesWith(GUCollider other)
+    public final boolean collidesWith(Collider other)
     {
         if(other == this) return false;
-        if(other instanceof GUSphereCollider)
+        if(other instanceof SphereCollider)
         {
-            return checkSphereCollision((GUSphereCollider)other);
+            return checkSphereCollision((SphereCollider)other);
         }
-        if(other instanceof GUCylinderCollider)
+        if(other instanceof CylinderCollider)
         {
-            return checkCylinderCollision((GUCylinderCollider)other);
+            return checkCylinderCollision((CylinderCollider)other);
         }
         return false;
     }
@@ -71,23 +71,23 @@ public abstract class GUCollider
         return v;
     }
 
-    protected abstract boolean checkSphereCollision(GUSphereCollider other);
+    protected abstract boolean checkSphereCollision(SphereCollider other);
 
-    protected abstract boolean checkCylinderCollision(GUCylinderCollider other);
+    protected abstract boolean checkCylinderCollision(CylinderCollider other);
 
 
     public final void fixedUpdate()
     {
         if(!valid) return;
-        List<GUCollider> newCollisions = new ArrayList<>();
-        for(GUCollider c : getGUObject().getScene().getColliders())
+        List<Collider> newCollisions = new ArrayList<>();
+        for(Collider c : getGUObject().getScene().getColliders())
         {
             if(collidesWith(c) || c.collidesWith(this))
             {
                 newCollisions.add(c);
             }
         }
-        for( GUCollider c : newCollisions )
+        for( Collider c : newCollisions )
         {
             if(!collisions.contains(c))
             {
@@ -99,8 +99,8 @@ public abstract class GUCollider
                 throwCollisionStay(c);
             }
         }
-        List<GUCollider> remove = new ArrayList<>();
-        for( GUCollider c : collisions )
+        List<Collider> remove = new ArrayList<>();
+        for( Collider c : collisions )
         {
             if(!newCollisions.contains(c))
             {
@@ -108,13 +108,13 @@ public abstract class GUCollider
                 remove.add(c);
             }
         }
-        for( GUCollider c : remove )
+        for( Collider c : remove )
         {
             collisions.remove(c);
         }
     }
 
-    protected final void throwCollisionStay(GUCollider c)
+    protected final void throwCollisionStay(Collider c)
     {
         for(String scriptType : getGUObject().getScripts())
         {
@@ -122,7 +122,7 @@ public abstract class GUCollider
         }
     }
 
-    protected final void throwCollisionEnter(GUCollider c)
+    protected final void throwCollisionEnter(Collider c)
     {
         for(String scriptType : getGUObject().getScripts())
         {
@@ -130,7 +130,7 @@ public abstract class GUCollider
         }
     }
 
-    protected final void throwCollisionExit(GUCollider c)
+    protected final void throwCollisionExit(Collider c)
     {
         for(String scriptType : getGUObject().getScripts())
         {

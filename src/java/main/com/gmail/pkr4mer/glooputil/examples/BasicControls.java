@@ -1,5 +1,6 @@
-package com.gmail.pkr4mer.glooputil.object.scripting;
+package com.gmail.pkr4mer.glooputil.examples;
 
+import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**

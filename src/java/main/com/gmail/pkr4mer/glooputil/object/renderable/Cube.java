@@ -100,4 +100,9 @@ public class Cube extends VisibleTransform
     {
         backend.setzePosition(getAbsolutePosition().toGLVektor());
     }
+
+    @Override
+    public void createCollider() {
+
+    }
 }

@@ -8,18 +8,18 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
  * Created by peter on 1/28/14.
  */
 
-public final class GUSphereCollider extends GUCollider
+public final class SphereCollider extends Collider
 {
     private double radius;
 
-    public GUSphereCollider(Transform object, double radius)
+    public SphereCollider(Transform object, double radius)
     {
         super(object);
         setRadius(radius);
         setCenterOffset(new Vector(0, 0, 0));
     }
 
-    public GUSphereCollider(Transform object, double radius, Vector offset)
+    public SphereCollider(Transform object, double radius, Vector offset)
     {
         super(object);
         setRadius(radius);
@@ -33,13 +33,13 @@ public final class GUSphereCollider extends GUCollider
     }
 
     @Override
-    protected boolean checkSphereCollision(GUSphereCollider other)
+    protected boolean checkSphereCollision(SphereCollider other)
     {
         return getAbsoluteCenter().distanceSquared(other.getAbsoluteCenter()) <= Math.pow(radius+other.radius,2);
     }
 
     @Override
-    protected boolean checkCylinderCollision(GUCylinderCollider other) { //TODO
+    protected boolean checkCylinderCollision(CylinderCollider other) { //TODO
         return false;
     }
 
