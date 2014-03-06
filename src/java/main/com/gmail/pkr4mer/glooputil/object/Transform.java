@@ -63,22 +63,21 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         registerInParent();
     }
 
-    private void registerInScene() throws Exception
+    private void registerInScene()
     {
-        if(this.name == null)
+        if(name == null)
         {
-            name = scene.getAvailableName(this.getClass().getSimpleName().toLowerCase());
+            name = this.getClass().getSimpleName().toLowerCase();
         }
         scene.register(this);
     }
 
-    private boolean registerInParent() throws Exception {
-        if(parent == null)
+    private boolean registerInParent()
+    {
+        if(name == null)
         {
-            registerInScene();
-            return true;
+            name = this.getClass().getSimpleName().toLowerCase();
         }
-        registerInScene();
         return parent.addChild(this);
     }
 
@@ -89,13 +88,18 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         return parent;
     }
 
-    public final boolean setParent(ObjectHolder t) throws Exception {
+    public final boolean setParent(ObjectHolder t)
+    {
         if( parent != null && t == null)
         {
             ObjectHolder p = parent;
             parent = null;
             p.removeChild(this);
             return true;
+        }
+        if(parent == null && t != null)
+        {
+            scene.removeChild(this);
         }
         if(!(t instanceof Transform) || this.isParentOf(t)) return false;
         parent = (Transform) t;
@@ -143,6 +147,16 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         return true;
     }
 
+    @Override
+    public List<ObjectHolder> findObject(String name)
+    {
+        ArrayList<ObjectHolder> results = new ArrayList<>();
+        for(ObjectHolder t : getChildren())
+        {
+            results.addAll(t.findObject(name));
+        }
+        return results;    }
+
     public final boolean isParentOf(ObjectHolder t)
     {
         return t.isChildOf(this);
@@ -172,15 +186,9 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         return name;
     }
 
-    public final boolean setName(String name)
+    public final void setName(String name)
     {
-        if(name.equalsIgnoreCase(getName())) return true;
-        if(scene.rename(getName(), name))
-        {
-            this.name = name;
-            return true;
-        }
-        return false;
+        if(name != null) this.name = name;
     }
 
     public final ArrayList<String> getScripts()
@@ -263,7 +271,6 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     public final boolean destroy(){   // Deletes the Transform
         if(!valid) return false;
         valid = false;
-        scene.destroy(getName());
         if(parent != null) parent.removeChild(this);
         destroyBackend();
         return true;
@@ -429,7 +436,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         updateBackend();
         if(collider != null) collider.fixedUpdate();
         runScripts();
-        for(Transform t : children)
+        for(Transform t : getChildrenAsTransforms())
         {
             t.fixedUpdate();
         }

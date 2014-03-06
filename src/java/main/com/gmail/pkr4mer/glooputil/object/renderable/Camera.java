@@ -1,7 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object.renderable;
 
 import GLOOP.GLKamera;
-import GLOOP.GLSchwenkkamera;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.ObjectHolder;
 import com.gmail.pkr4mer.glooputil.object.Transform;

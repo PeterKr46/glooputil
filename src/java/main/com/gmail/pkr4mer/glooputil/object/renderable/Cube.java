@@ -17,10 +17,6 @@ public class Cube extends VisibleTransform
     public Cube(Vector position, double radius, Scene scene, String tag, String name) throws Exception
     {
         super(position, scene, tag, name);
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("sphere");
-        }
         backend = new GLWuerfel(position.toGLVektor(),radius);
     }
 
@@ -61,10 +57,6 @@ public class Cube extends VisibleTransform
     public Cube(Vector position, double radius, Scene scene, Transform parent, String tag, String name) throws Exception
     {
         super(position, scene, parent, tag, name);
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("sphere");
-        }
         backend = new GLWuerfel(position.toGLVektor(),radius);
     }
 

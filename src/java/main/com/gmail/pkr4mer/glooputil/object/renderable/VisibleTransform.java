@@ -3,7 +3,6 @@ package com.gmail.pkr4mer.glooputil.object.renderable;
 import GLOOP.GLObjekt;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.Transform;
-import com.gmail.pkr4mer.glooputil.object.collider.Collider;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**

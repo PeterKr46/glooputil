@@ -16,10 +16,6 @@ public class Sphere extends VisibleTransform
     public Sphere(Vector position, double radius, Scene scene, String tag, String name) throws Exception
     {
         super(position, scene, tag, name);
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("sphere");
-        }
         backend = new GLKugel(position.toGLVektor(),radius);
         defaultScale[0] = radius;
         defaultScale[1] = radius;
@@ -29,10 +25,6 @@ public class Sphere extends VisibleTransform
     public Sphere(Vector position, double radius, Scene scene, Transform parent, String tag, String name) throws Exception
     {
         super(position, scene, parent, tag, name);
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("sphere");
-        }
         backend = new GLKugel(position.toGLVektor(),radius);
     }
 

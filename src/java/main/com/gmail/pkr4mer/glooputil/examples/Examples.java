@@ -1,8 +1,11 @@
 package com.gmail.pkr4mer.glooputil.examples;
 
-import GLOOP.*;
+import GLOOP.GLLicht;
+import GLOOP.GLTerrain;
 import com.gmail.pkr4mer.glooputil.Scene;
-import com.gmail.pkr4mer.glooputil.object.renderable.*;
+import com.gmail.pkr4mer.glooputil.object.renderable.Cube;
+import com.gmail.pkr4mer.glooputil.object.renderable.Cylinder;
+import com.gmail.pkr4mer.glooputil.object.renderable.Sphere;
 import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 

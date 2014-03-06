@@ -1,7 +1,6 @@
 package com.gmail.pkr4mer.glooputil.examples.spaceinvaders;
 
 import com.gmail.pkr4mer.glooputil.Scene;
-import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.object.renderable.Cube;
 import com.gmail.pkr4mer.glooputil.object.renderable.Light;
 import com.gmail.pkr4mer.glooputil.object.renderable.Sphere;

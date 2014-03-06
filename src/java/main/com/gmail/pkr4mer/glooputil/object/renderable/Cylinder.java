@@ -17,10 +17,6 @@ public class Cylinder extends VisibleTransform
     {
         super(positionA.addClone(positionA.differenceClone(positionB).multiply(0.5)), scene, tag, name);
         Vector center = positionA.addClone(positionA.differenceClone(positionB).multiply(0.5));
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("cylinder");
-        }
         backend = new GLPrismoid(center.toGLVektor(),radius,radius,(int)Math.floor(2 * Math.PI * radius)+5,positionA.distance(positionB));
         Vector diff = positionA.difference(positionB);
         setForward(diff);
@@ -35,10 +31,7 @@ public class Cylinder extends VisibleTransform
     {
         super(positionA.addClone(positionA.differenceClone(positionB).multiply(0.5)), scene, parent, tag, name);
         Vector center = positionA.addClone(positionA.differenceClone(positionB).multiply(0.5));
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("cylinder");
-        }
+
         backend = new GLPrismoid(center.toGLVektor(),radius,radius,(int)Math.floor(2 * Math.PI * radius)+5,positionA.distance(positionB));
         Vector diff = positionA.difference(positionB);
         setForward(diff);
@@ -52,20 +45,13 @@ public class Cylinder extends VisibleTransform
     public Cylinder(Vector position, double radius, double height, Scene scene, String tag, String name) throws Exception
     {
         super(position, scene, tag, name);
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("cylinder");
-        }
+
         backend = new GLPrismoid(position.toGLVektor(),radius, radius, (int)Math.floor(2 * Math.PI * radius), height);
     }
 
     public Cylinder(Vector position, double radius, double height, Scene scene, Transform parent, String tag, String name) throws Exception
     {
         super(position, scene, parent, tag, name);
-        if( this.name == null || scene.isNameTaken(this.name) )
-        {
-            this.name = scene.getAvailableName("cylinder");
-        }
         backend = new GLPrismoid(position.toGLVektor(),radius, radius, (int)Math.floor(2 * Math.PI * radius), height);
     }
 

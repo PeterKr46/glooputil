@@ -1,11 +1,11 @@
 package com.gmail.pkr4mer.glooputil;
 
-import GLOOP.*;
-import com.gmail.pkr4mer.glooputil.object.*;
+import GLOOP.GLTastatur;
+import com.gmail.pkr4mer.glooputil.object.ObjectHolder;
+import com.gmail.pkr4mer.glooputil.object.Transform;
 import com.gmail.pkr4mer.glooputil.object.collider.Collider;
 import com.gmail.pkr4mer.glooputil.object.renderable.Camera;
 import com.gmail.pkr4mer.glooputil.position.Vector;
-import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,14 +16,14 @@ import java.util.List;
  */
 public final class Scene implements ObjectHolder
 {
-    private CaseInsensitiveMap<Transform> objects;
+    private List<Transform> children;
     private boolean running;
     private GLTastatur keyboard;
     private Camera camera;
 
     public Scene()
     {
-        objects = new CaseInsensitiveMap<>();
+        children = new ArrayList<>();
         running = true;
         try {
             camera = new Camera(640,640, new Vector(0,500,0),this,"MainCamera","MainCamera");
@@ -52,9 +52,14 @@ public final class Scene implements ObjectHolder
         return true;
     }
 
-    public Transform findObject(String name)
+    public List<ObjectHolder> findObject(String name)
     {
-        return objects.get(name);
+        ArrayList<ObjectHolder> results = new ArrayList<>();
+        for(Transform t : children)
+        {
+            results.addAll(t.findObject(name));
+        }
+        return results;
     }
 
     public void log(Object o)
@@ -80,7 +85,7 @@ public final class Scene implements ObjectHolder
                         Thread.sleep(50L);
                         synchronized (threadO)
                         {
-                            for( Transform o : new ArrayList<>(objects.values()) )
+                            for( Transform o : children )
                             {
                                 o.fixedUpdate();
                             }
@@ -93,30 +98,9 @@ public final class Scene implements ObjectHolder
         }.start();
     }
 
-    public String getAvailableName(String name)
-    {
-        if(!isNameTaken(name)) return name;
-        int i = 0;
-        do {
-            i++;
-        } while(isNameTaken(name + "_" + i));
-        return name + "_" + i;
-    }
-
-    public boolean isNameTaken(String name)
-    {
-        return objects.get(name) != null;
-    }
-
     public void debug()
     {
         log("Scene");
-        String allNames = "";
-        for(String k : objects.keySet())
-        {
-            allNames += k + ", ";
-        }
-        log(allNames);
         for(ObjectHolder o : getChildren())
         {
             o.debug(" - ");
@@ -148,24 +132,9 @@ public final class Scene implements ObjectHolder
         return key.equalsIgnoreCase("tab") && keyboard.tab();
     }
 
-    public boolean rename(String name, String newName)
-    {
-        if(!isNameTaken(name) || isNameTaken(newName)) return false;
-        Transform guo = objects.remove(name);
-        objects.put(newName,guo);
-        return guo.setName(name);
-    }
-
-    public boolean destroy(String name)
-    {
-        if(!isNameTaken(name)) return false;
-        Transform guo = objects.remove(name);
-        return guo.destroy();
-    }
-
     public void destroy()
     {
-        for( Transform guo : objects.values() )
+        for( Transform guo : children )
         {
             guo.destroy();
         }
@@ -174,7 +143,9 @@ public final class Scene implements ObjectHolder
     @Override
     public boolean addChild(ObjectHolder child)
     {
-        throw new UnsupportedOperationException("A Scene Object's Children cannot be directly manipulated.");
+        child.setParent(this);
+        children.add((Transform) child);
+        return true;
     }
 
     @Override
@@ -204,25 +175,25 @@ public final class Scene implements ObjectHolder
     @Override
     public List<ObjectHolder> getChildren()
     {
-        return new ArrayList<ObjectHolder>(objects.values());
+        return new ArrayList<ObjectHolder>(children);
     }
 
     @Override
     public boolean removeChild(ObjectHolder child)
     {
-        throw new UnsupportedOperationException("A Scene Object's Children cannot be directly manipulated.");
+        child.setParent(null);
+        return children.remove(child);
     }
 
-    public void register(Transform transform) throws Exception
+    public void register(Transform transform)
     {
-        if(this.isNameTaken(transform.getName())) throw new Exception("Name '" + transform.getName() + "' already taken.");
-        objects.put(transform.getName(),transform);
+        addChild(transform);
     }
 
     public List<Collider> getColliders()
     {
         List<Collider> result = new ArrayList<>();
-        for(Transform t : objects.values() )
+        for(Transform t : children )
         {
             result.addAll(t.getAllColliders());
         }
