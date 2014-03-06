@@ -1,12 +1,12 @@
 package com.gmail.pkr4mer.glooputil.examples;
 
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 2/14/14.
  */
-public class BasicControls extends GUScript
+public class BasicControls extends BehaviourScript
 {
     private double axisX = 0;
     private double axisZ = 0;

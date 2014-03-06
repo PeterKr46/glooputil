@@ -7,14 +7,12 @@ import com.gmail.pkr4mer.glooputil.object.collider.Collider;
 /**
  * Created by peter on 1/25/14.
  */
-public abstract class GUScript
+public abstract class BehaviourScript
 {
     private boolean started = false;
     private Transform transform;
 
-    public GUScript()
-    {
-    }
+    public BehaviourScript() {}
 
     public final void setTransform(Transform o)
     {

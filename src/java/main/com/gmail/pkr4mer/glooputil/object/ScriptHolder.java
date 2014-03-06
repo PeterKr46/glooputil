@@ -1,6 +1,6 @@
 package com.gmail.pkr4mer.glooputil.object;
 
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import java.util.List;
 public interface ScriptHolder
 {
     public void runScripts();
-    public GUScript getScript(String id);
-    public boolean addScript(GUScript script);
-    public boolean removeScript(GUScript script);
+    public BehaviourScript getScript(String id);
+    public boolean addScript(BehaviourScript script);
+    public boolean removeScript(BehaviourScript script);
     public List<String> getScripts();
 }

@@ -105,4 +105,10 @@ public class Cube extends VisibleTransform
     public void createCollider() {
 
     }
+
+    @Override
+    protected boolean destroyBackend() {
+        backend.loesche();
+        return true;
+    }
 }

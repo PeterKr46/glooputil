@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Class-Path: vecmath-1.5.2.jar j3dcore-1.5.2+dfsg.jar j3dcore.jar j3dut
+ ils-1.5.2+dfsg.jar j3dutils.jar gluegen-rt.jar gluegen.jar jogl-all-m
+ obile.jar jogl-all-noawt.jar jogl-all.jar AppleJavaExtensions.jar bjd
+ oclet.jar bluej.jar bluejcore.jar bluejeditor.jar bluejext.jar common
+ s-logging-api-1.1.2.jar diffutils-1.2.1.jar httpclient-4.1.1.jar http
+ core-4.1.jar httpmime-4.1.1.jar junit-4.8.2.jar org-netbeans-lib-cvsc
+ lient.jar svnkit-javahl.jar svnkit.jar trilead.jar GOOP.jar
+Main-Class: com.gmail.pkr4mer.glooputil.examples.Examples
+

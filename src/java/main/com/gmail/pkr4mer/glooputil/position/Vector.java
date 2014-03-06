@@ -56,15 +56,25 @@ public class Vector
 
     public Vector add(Vector v)
     {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
+        return add(v.x,v.y,v.z);
+    }
+
+    public Vector add(double x, double y, double z)
+    {
+        this.x += x;
+        this.y += y;
+        this.z += z;
         return this;
     }
 
     public Vector addClone(Vector v)
     {
         return clone().add(v);
+    }
+
+    public Vector addClone(double x, double y, double z)
+    {
+        return clone().add(x,y,z);
     }
 
     public Vector setX(double x)

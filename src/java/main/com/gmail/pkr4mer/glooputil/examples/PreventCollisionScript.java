@@ -1,13 +1,13 @@
 package com.gmail.pkr4mer.glooputil.examples;
 
 import com.gmail.pkr4mer.glooputil.object.collider.Collider;
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 2/20/14.
  */
-public class PreventCollisionScript extends GUScript
+public class PreventCollisionScript extends BehaviourScript
 {
     @Override
     public void onStart()

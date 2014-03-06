@@ -39,8 +39,15 @@ public final class SphereCollider extends Collider
     }
 
     @Override
-    protected boolean checkCylinderCollision(CylinderCollider other) { //TODO
-        return false;
+    protected boolean checkCylinderCollision(CylinderCollider other)
+    {
+        return other.checkSphereCollision(this);
+    }
+
+    @Override
+    protected boolean checkBoxCollision(BoxCollider other)
+    {
+        return other.checkSphereCollision(this);
     }
 
     public void setRadius(double radius)

@@ -106,4 +106,10 @@ public class Cylinder extends VisibleTransform
     public void createCollider() {
         collider = new CylinderCollider(this,getScaleX(),getScaleY());
     }
+
+    @Override
+    protected boolean destroyBackend() {
+        backend.loesche();
+        return true;
+    }
 }

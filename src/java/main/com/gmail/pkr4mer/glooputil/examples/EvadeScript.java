@@ -1,13 +1,13 @@
 package com.gmail.pkr4mer.glooputil.examples;
 
 import com.gmail.pkr4mer.glooputil.object.Transform;
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 /**
  * Created by peter on 2/18/14.
  */
-public class EvadeScript extends GUScript
+public class EvadeScript extends BehaviourScript
 {
     private double maxSpeed;
     private double targetDistance;

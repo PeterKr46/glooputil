@@ -3,7 +3,7 @@ package com.gmail.pkr4mer.glooputil.examples;
 import GLOOP.*;
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.renderable.*;
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class Examples
         }*/
         new GLTerrain(0,0,0,new File("").getAbsolutePath() + "/resources/textures/lava.png");
         balloon.addScript(
-                new GUScript() {
+                new BehaviourScript() {
                     private double i = 0;
                     private double timeScale = 0.1;
                     private double baseY;

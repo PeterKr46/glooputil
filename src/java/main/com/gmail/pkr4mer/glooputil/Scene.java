@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by peter on 1/24/14.
  */
-public class Scene implements ObjectHolder
+public final class Scene implements ObjectHolder
 {
     private CaseInsensitiveMap<Transform> objects;
     private boolean running;
@@ -26,7 +26,7 @@ public class Scene implements ObjectHolder
         objects = new CaseInsensitiveMap<>();
         running = true;
         try {
-            camera = new Camera(560,560, new Vector(0,500,0),this,"MainCamera","MainCamera");
+            camera = new Camera(640,640, new Vector(0,500,0),this,"MainCamera","MainCamera");
             mainThread();
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,6 +55,11 @@ public class Scene implements ObjectHolder
     public Transform findObject(String name)
     {
         return objects.get(name);
+    }
+
+    public void log(Object o)
+    {
+        System.out.println("[GU-Scene] " + o.toString());
     }
 
     private void mainThread() throws Exception
@@ -103,16 +108,29 @@ public class Scene implements ObjectHolder
         return objects.get(name) != null;
     }
 
-    protected void debug()
+    public void debug()
     {
-        for( String key : objects.keySet() )
+        log("Scene");
+        String allNames = "";
+        for(String k : objects.keySet())
         {
-            System.out.println(key + " = " + objects.get(key));
+            allNames += k + ", ";
         }
+        log(allNames);
+        for(ObjectHolder o : getChildren())
+        {
+            o.debug(" - ");
+        }
+    }
+
+    public void debug(String prefix)
+    {
+        debug();
     }
 
     public boolean isKeyPressed(String key)
     {
+        if(keyboard == null) registerKeyboard();
         if(key.length() == 1)
         {
             return keyboard.istGedrueckt(key.charAt(0));

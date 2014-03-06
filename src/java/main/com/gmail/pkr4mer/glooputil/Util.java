@@ -1,5 +1,7 @@
 package com.gmail.pkr4mer.glooputil;
 
+import GLOOP.Sys;
+
 /**
  * GloopUtil ist eine winzige Library, die zur Vereinfachung der Erstellung von Objekten in Gloop dient.
  * 
@@ -22,4 +24,14 @@ public abstract class Util
 		}
 		return new double[][]{ecke1,ecke2};				            // Gib die beiden sortierten Arrays zurück
 	}
+
+    public static long unixTimeMil()
+    {
+        return System.currentTimeMillis();
+    }
+
+    public static long unixTimeSec()
+    {
+        return System.currentTimeMillis()/1000;
+    }
 }

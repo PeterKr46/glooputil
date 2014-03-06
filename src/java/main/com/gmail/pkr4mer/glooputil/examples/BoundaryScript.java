@@ -1,11 +1,11 @@
 package com.gmail.pkr4mer.glooputil.examples;
 
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 
 /**
  * Created by peter on 2/20/14.
  */
-public class BoundaryScript extends GUScript
+public class BoundaryScript extends BehaviourScript
 {
 
     private double minX, maxX;

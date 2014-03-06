@@ -2,7 +2,7 @@ package com.gmail.pkr4mer.glooputil.object;
 
 import com.gmail.pkr4mer.glooputil.Scene;
 import com.gmail.pkr4mer.glooputil.object.collider.Collider;
-import com.gmail.pkr4mer.glooputil.object.scripting.GUScript;
+import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 import com.gmail.pkr4mer.glooputil.position.Vector;
 import com.gmail.pkr4mer.util.CaseInsensitiveMap;
 
@@ -30,7 +30,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     protected final double[] defaultScale;
     protected final double[] scale;
 
-    protected final CaseInsensitiveMap<GUScript> scripts;
+    protected final CaseInsensitiveMap<BehaviourScript> scripts;
     protected boolean valid = true;
     protected Collider collider;
 
@@ -48,7 +48,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         registerInScene();
     }
 
-    public Transform(Vector positition, Scene scene, Transform parent, String tag, String name)
+    public Transform(Vector positition, Scene scene, Transform parent, String tag, String name) throws Exception
     {
         forward = Vector.forward();
         this.position = positition;
@@ -67,13 +67,18 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     {
         if(this.name == null)
         {
-            name = scene.getAvailableName(this.getClass().getName().toLowerCase());
+            name = scene.getAvailableName(this.getClass().getSimpleName().toLowerCase());
         }
         scene.register(this);
     }
 
-    private boolean registerInParent()
-    {
+    private boolean registerInParent() throws Exception {
+        if(parent == null)
+        {
+            registerInScene();
+            return true;
+        }
+        registerInScene();
         return parent.addChild(this);
     }
 
@@ -84,8 +89,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         return parent;
     }
 
-    public final boolean setParent(ObjectHolder t)
-    {
+    public final boolean setParent(ObjectHolder t) throws Exception {
         if( parent != null && t == null)
         {
             ObjectHolder p = parent;
@@ -95,6 +99,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         }
         if(!(t instanceof Transform) || this.isParentOf(t)) return false;
         parent = (Transform) t;
+        registerInParent();
         return true;
     }
 
@@ -130,7 +135,11 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     public boolean removeChild(ObjectHolder child)
     {
         children.remove(child);
-        child.setParent(null);
+        try {
+            child.setParent(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -254,8 +263,13 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     public final boolean destroy(){   // Deletes the Transform
         if(!valid) return false;
         valid = false;
-        return scene.destroy(getName());
+        scene.destroy(getName());
+        if(parent != null) parent.removeChild(this);
+        destroyBackend();
+        return true;
     }
+
+    protected abstract boolean destroyBackend();
 
     public final void setScale(double pS){    // Sets the Transform's scale to the given size
         scale[0] = pS;
@@ -302,20 +316,20 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
 
     public final void runScripts()   // Activates the scripts
     {
-        Map<Integer,List<GUScript>> ordered = new HashMap<>();
-        for(GUScript gus : scripts.values())
+        Map<Integer,List<BehaviourScript>> ordered = new HashMap<>();
+        for(BehaviourScript gus : scripts.values())
         {
             if(!ordered.containsKey(gus.getRunPriority().getValue()))
             {
-                ordered.put(gus.getRunPriority().getValue(),new ArrayList<GUScript>());
+                ordered.put(gus.getRunPriority().getValue(),new ArrayList<BehaviourScript>());
             }
             ordered.get(gus.getRunPriority().getValue()).add(gus);
         }
-        for( int lvl : GUScript.RunPriority.getValues() )
+        for( int lvl : BehaviourScript.RunPriority.getValues() )
         {
             if(ordered.containsKey(lvl))
             {
-                for( GUScript gus : ordered.get(lvl) )
+                for( BehaviourScript gus : ordered.get(lvl) )
                 {
                     gus.onUpdate();
                 }
@@ -323,7 +337,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         }
     }
 
-    public final boolean addScript(GUScript script)  // Adds a new script to the Transform
+    public final boolean addScript(BehaviourScript script)  // Adds a new script to the Transform
     {
         if(scripts.containsKey(script.getTypeName())) return false;
         scripts.put(script.getTypeName(),script);
@@ -332,7 +346,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     }
 
     @Override
-    public final boolean removeScript(GUScript script) {
+    public final boolean removeScript(BehaviourScript script) {
         if(!scripts.containsKey(script.getTypeName())) return false;
         scripts.remove(script.getTypeName());
         return true;
@@ -343,7 +357,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         return scripts.containsKey(typeName);
     }
 
-    public final GUScript getScript(String typeName)
+    public final BehaviourScript getScript(String typeName)
     {
         return scripts.get(typeName);
     }
@@ -428,5 +442,23 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     {
         forward = position.difference(pPosition);
         forward.normalize();
+    }
+
+    public void debug()
+    {
+        scene.log(getName() + " | " + this.toString());
+        for(Transform c : getChildrenAsTransforms() )
+        {
+            c.debug(" - ");
+        }
+    }
+
+    public void debug(String prefix)
+    {
+        scene.log(prefix + getName() + " | " + this.toString());
+        for(Transform c : getChildrenAsTransforms() )
+        {
+            c.debug(prefix +" - ");
+        }
     }
 }

@@ -75,6 +75,8 @@ public abstract class Collider
 
     protected abstract boolean checkCylinderCollision(CylinderCollider other);
 
+    protected abstract boolean checkBoxCollision(BoxCollider other);
+
 
     public final void fixedUpdate()
     {

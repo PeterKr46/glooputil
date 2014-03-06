@@ -11,7 +11,7 @@ public interface ObjectHolder
 
     public ObjectHolder getParent();
 
-    public boolean setParent(ObjectHolder parent);
+    public boolean setParent(ObjectHolder parent) throws Exception;
 
     public boolean isParentOf(ObjectHolder other);
 
@@ -21,4 +21,7 @@ public interface ObjectHolder
 
     public boolean removeChild(ObjectHolder child);
 
+    public abstract void debug();
+
+    public abstract void debug(String prefix);
 }

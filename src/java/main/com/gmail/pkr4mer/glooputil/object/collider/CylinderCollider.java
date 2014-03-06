@@ -104,6 +104,12 @@ public final class CylinderCollider extends Collider
         return false;
     }
 
+    @Override
+    protected boolean checkBoxCollision(BoxCollider other)
+    {
+        return other.checkCylinderCollision(this);
+    }
+
     public Vector getUpperCenter()
     {
         Vector u = getAbsoluteCenter();

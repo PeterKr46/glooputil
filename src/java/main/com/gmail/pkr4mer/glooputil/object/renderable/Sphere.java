@@ -91,4 +91,10 @@ public class Sphere extends VisibleTransform
         collider = new SphereCollider(this,getBiggestRadius());
         System.out.println(((SphereCollider)collider).getRadius());
     }
+
+    @Override
+    protected boolean destroyBackend() {
+        backend.loesche();
+        return true;
+    }
 }

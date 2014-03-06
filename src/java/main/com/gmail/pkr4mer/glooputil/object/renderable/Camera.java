@@ -28,6 +28,11 @@ public class Camera extends Transform {
     }
 
     @Override
+    protected boolean destroyBackend() {
+        return false;
+    }
+
+    @Override
     public void rotate(Vector degr) {}
 
     @Override
@@ -40,6 +45,11 @@ public class Camera extends Transform {
     public boolean addChild(ObjectHolder t)
     {
         throw new UnsupportedOperationException("ObjectHolders may not be attached to the Camera.");
+    }
+
+    public void lookAt(Transform pTransform)
+    {
+        if(pTransform != null) targetPosition = pTransform.getAbsolutePosition();
     }
 
     @Override
