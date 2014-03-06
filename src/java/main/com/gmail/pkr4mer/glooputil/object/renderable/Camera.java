@@ -14,7 +14,7 @@ public class Camera extends Transform {
     private GLKamera backend;
     private Vector targetPosition = Vector.zero();
 
-    public Camera(int width,int height,Vector position, Scene scene, String tag, String name) throws Exception
+    public Camera(int width,int height,Vector position, Scene scene, String tag, String name)
     {
         super(position, scene, tag, name);
         backend = new GLKamera(width,height);

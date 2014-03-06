@@ -14,13 +14,13 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 public class Cube extends VisibleTransform
 {
 
-    public Cube(Vector position, double radius, Scene scene, String tag, String name) throws Exception
+    public Cube(Vector position, double radius, Scene scene, String tag, String name)
     {
         super(position, scene, tag, name);
         backend = new GLWuerfel(position.toGLVektor(),radius);
     }
 
-    public Cube(Vector min, Vector max, Scene scene, String tag, String name) throws Exception
+    public Cube(Vector min, Vector max, Scene scene, String tag, String name)
     {
         super(min.addClone(min.differenceClone(max).multiply(0.5)), scene, tag, name);
         double[][] edges = Util.sort(min.toDoubleArray(), max.toDoubleArray());

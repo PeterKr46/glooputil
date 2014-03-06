@@ -12,11 +12,11 @@ public class PlayerControl extends BehaviourScript
     {
         if(getTransform().getScene().isKeyPressed("left"))
         {
-            getTransform().move(1,0,0);
+            getTransform().move(-1,0,0);
         }
         else if(getTransform().getScene().isKeyPressed("right"))
         {
-            getTransform().move(-1,0,0);
+            getTransform().move(1,0,0);
         }
     }
 

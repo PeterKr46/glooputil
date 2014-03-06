@@ -13,7 +13,7 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
 public class Sphere extends VisibleTransform
 {
 
-    public Sphere(Vector position, double radius, Scene scene, String tag, String name) throws Exception
+    public Sphere(Vector position, double radius, Scene scene, String tag, String name)
     {
         super(position, scene, tag, name);
         backend = new GLKugel(position.toGLVektor(),radius);
@@ -22,7 +22,7 @@ public class Sphere extends VisibleTransform
         defaultScale[2] = radius;
     }
 
-    public Sphere(Vector position, double radius, Scene scene, Transform parent, String tag, String name) throws Exception
+    public Sphere(Vector position, double radius, Scene scene, Transform parent, String tag, String name)
     {
         super(position, scene, parent, tag, name);
         backend = new GLKugel(position.toGLVektor(),radius);

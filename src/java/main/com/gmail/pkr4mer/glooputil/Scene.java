@@ -85,9 +85,12 @@ public final class Scene implements ObjectHolder
                         Thread.sleep(50L);
                         synchronized (threadO)
                         {
-                            for( Transform o : children )
+                            for( ObjectHolder o : getChildren() )
                             {
-                                o.fixedUpdate();
+                                if(o instanceof Transform)
+                                {
+                                    ((Transform) o).fixedUpdate();
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -98,18 +101,19 @@ public final class Scene implements ObjectHolder
         }.start();
     }
 
-    public void debug()
+    public String debug()
     {
-        log("Scene");
+        String result = "Scene\n";
         for(ObjectHolder o : getChildren())
         {
-            o.debug(" - ");
+            result += o.debug(" - ") + "\n";
         }
+        return result;
     }
 
-    public void debug(String prefix)
+    public String debug(String prefix)
     {
-        debug();
+        return debug() + "\n";
     }
 
     public boolean isKeyPressed(String key)

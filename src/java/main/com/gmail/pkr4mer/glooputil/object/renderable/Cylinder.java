@@ -13,7 +13,7 @@ import com.gmail.pkr4mer.glooputil.position.Vector;
  */
 public class Cylinder extends VisibleTransform
 {
-    public Cylinder(Vector positionA, Vector positionB, double radius, Scene scene, String tag, String name) throws Exception
+    public Cylinder(Vector positionA, Vector positionB, double radius, Scene scene, String tag, String name)
     {
         super(positionA.addClone(positionA.differenceClone(positionB).multiply(0.5)), scene, tag, name);
         Vector center = positionA.addClone(positionA.differenceClone(positionB).multiply(0.5));
@@ -27,7 +27,7 @@ public class Cylinder extends VisibleTransform
         backend.drehe(-x,y,0);
     }
 
-    public Cylinder(Vector positionA, Vector positionB, double radius, Scene scene, Transform parent, String tag, String name) throws Exception
+    public Cylinder(Vector positionA, Vector positionB, double radius, Scene scene, Transform parent, String tag, String name)
     {
         super(positionA.addClone(positionA.differenceClone(positionB).multiply(0.5)), scene, parent, tag, name);
         Vector center = positionA.addClone(positionA.differenceClone(positionB).multiply(0.5));

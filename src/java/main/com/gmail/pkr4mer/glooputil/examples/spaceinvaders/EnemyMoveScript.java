@@ -5,13 +5,13 @@ import com.gmail.pkr4mer.glooputil.object.scripting.BehaviourScript;
 /**
  * Created by peter on 3/6/14.
  */
-public class EnemyAI extends BehaviourScript
+public class EnemyMoveScript extends BehaviourScript
 {
 
     private double minX, maxX, speed;
     private int direction = 1;
 
-    public EnemyAI(double pMinX, double pMaxX, double pSpeed)
+    public EnemyMoveScript(double pMinX, double pMaxX, double pSpeed)
     {
         minX = pMinX;
         maxX = pMaxX;

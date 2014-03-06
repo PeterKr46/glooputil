@@ -13,12 +13,13 @@ public abstract class VisibleTransform extends Transform
     protected GLObjekt backend;
     protected double[] color = new double[]{1,1,1};
 
-    public VisibleTransform(Vector position, Scene scene, String tag, String name) throws Exception
+    public VisibleTransform(Vector position, Scene scene, String tag, String name)
     {
         super(position, scene, tag, name);
     }
 
-    public VisibleTransform(Vector position, Scene scene, Transform parent, String tag, String name) throws Exception {
+    public VisibleTransform(Vector position, Scene scene, Transform parent, String tag, String name)
+    {
         super(position, scene, parent, tag, name);
     }
 

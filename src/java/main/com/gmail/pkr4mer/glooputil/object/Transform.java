@@ -34,7 +34,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
     protected boolean valid = true;
     protected Collider collider;
 
-    public Transform(Vector position, Scene scene, String tag, String name) throws Exception
+    public Transform(Vector position, Scene scene, String tag, String name)
     {
         forward = Vector.forward();
         this.position = position;
@@ -48,7 +48,7 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         registerInScene();
     }
 
-    public Transform(Vector positition, Scene scene, Transform parent, String tag, String name) throws Exception
+    public Transform(Vector positition, Scene scene, Transform parent, String tag, String name)
     {
         forward = Vector.forward();
         this.position = positition;
@@ -451,21 +451,24 @@ public abstract class Transform implements ObjectHolder, ScriptHolder, Rotatable
         forward.normalize();
     }
 
-    public void debug()
+    public String debug()
     {
-        scene.log(getName() + " | " + this.toString());
+        String result = getName() + " | " + this.toString() + "\n";
         for(Transform c : getChildrenAsTransforms() )
         {
-            c.debug(" - ");
+            result += c.debug(" - ") + "\n";
         }
+        return result;
     }
 
-    public void debug(String prefix)
+    public String debug(String prefix)
     {
-        scene.log(prefix + getName() + " | " + this.toString());
+        String result = "";
+        result += prefix + getName() + " | " + this.toString() + "\n";
         for(Transform c : getChildrenAsTransforms() )
         {
-            c.debug(prefix +" - ");
+            result += c.debug(prefix +" - ") + "\n";
         }
+        return result;
     }
 }

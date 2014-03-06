@@ -1,6 +1,7 @@
 package com.gmail.pkr4mer.glooputil.examples.spaceinvaders;
 
 import com.gmail.pkr4mer.glooputil.Scene;
+import com.gmail.pkr4mer.glooputil.addon.ElementWatcher;
 import com.gmail.pkr4mer.glooputil.object.renderable.Cube;
 import com.gmail.pkr4mer.glooputil.object.renderable.Light;
 import com.gmail.pkr4mer.glooputil.object.renderable.Sphere;
@@ -37,6 +38,7 @@ public class SpaceInvaders
         );
         createEnemies(scene);
         scene.debug();
+        scene.getCamera().addScript(new ElementWatcher(scene));
     }
 
     public static void createEnemies(Scene scene) throws Exception
@@ -46,7 +48,8 @@ public class SpaceInvaders
         {
             VisibleTransform enemy = new Sphere(new Vector(x,20,0),1,scene,"enemy",null);
             enemy.setParent(base);
-            if(Math.random() > 0.9)
+            enemy.addScript(new EnemyShootScript());
+            /*if(Math.random() > 0.9)
             {
                 enemy.addScript(
                         new BehaviourScript() {
@@ -68,8 +71,8 @@ public class SpaceInvaders
                         }
                 );
                 scene.log("Deleting -> " + enemy);
-            }
+            }*/
         }
-        base.addScript(new EnemyAI(-5,5,0.1));
+        base.addScript(new EnemyMoveScript(-5,5,0.1));
     }
 }

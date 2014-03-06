@@ -23,7 +23,7 @@ public interface ObjectHolder
 
     public List<ObjectHolder> findObject(String name);
 
-    public abstract void debug();
+    public abstract String debug();
 
-    public abstract void debug(String prefix);
+    public abstract String debug(String prefix);
 }

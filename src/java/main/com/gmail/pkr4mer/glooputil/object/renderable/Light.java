@@ -12,7 +12,7 @@ public class Light extends VisibleTransform
     private GLLicht licht;
     private double[] backgroundLight = new double[3];
 
-    public Light(Vector position, Scene scene, String tag, String name) throws Exception
+    public Light(Vector position, Scene scene, String tag, String name)
     {
         super(position, scene, tag, name);
         licht = new GLLicht();
